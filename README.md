@@ -1,30 +1,49 @@
-Most of my work lives in private repos, so this is how I build rather than what
-I have pushed.
+Hi, I'm Kobe.
 
-**Money state is derived, never typed.** Paid, underpaid and refunded are
-computed from the payment records in integer centavos. Nobody sets a status by
-hand, so nobody can set it wrong.
+I'm a Laravel developer living in Nagoya, Japan. I build ordering and booking
+systems for food businesses back home in the Philippines, the kind that take
+payment before anything gets delivered.
 
-**Payment history is append-only.** The event log throws on update and delete.
-Current state stays indexed and queryable; the narrative stays immutable. Both
-halves are deliberate.
+## What I've built
 
-**Tests gate the deploy, not the commit.** A commit is a save point. The deploy
-script reads the diff, decides which checks the change earns, runs them, and
-refuses to push on red.
+**Chicky'Oink Manila** sells lechon belly out of three branches. Before, staff
+ran everything through Messenger. Every order got typed again into a to-do app,
+GCash screenshots were checked by eye, and someone rebuilt the kitchen's list
+by hand every night.
 
-**Migrations are additive.** No dropped columns, no data rewritten in the same
-change that ships a feature. Every migration is rehearsed against a restored
-production dump before it runs for real.
+I built them one system to replace all four tools. It went live on 12 August
+2026 and I still run it.
 
-**Comments explain why, not what.** A guard's docblock carries the incident that
-created it and the date the rule changed. Delete the comment and the next person
-deletes the guard.
+Its first 38 days:
 
----
+- 359 orders
+- 290 customers on record
+- 52% of orders placed on the website, with nobody typing them in
+- 260 payments checked and accepted
 
-**Stack** · PHP 8 · Laravel · Tailwind · JavaScript · MariaDB · SQLite · Pest · GitHub Actions
+## How I build
 
-**Also** · embedded C — CAN bus, ISO-TP, UDS, ESP32 / RP2040
+The code is private, since it's a business's live system. So, briefly:
 
-**Languages** · English · Filipino · Japanese (JLPT N4)
+Nobody types a payment status. Paid, underpaid and refunded are worked out from
+the actual payment records, down to the centavo, and every payment event goes
+into a log that can't be edited or deleted. Money is the one thing you don't
+get to be approximately right about.
+
+Tests run before anything ships. The deploy script reads the diff, runs what
+the change actually needs, and refuses to push if something's red.
+
+Migrations only ever add. No dropped columns, and each one gets rehearsed
+against a copy of the real database before it runs for real.
+
+## Stack
+
+PHP, Laravel, Tailwind, JavaScript, MariaDB, Pest, GitHub Actions.
+
+I also write embedded C at my day job, mostly CAN bus work on ESP32 and RP2040.
+
+English, Filipino, and Japanese (JLPT N4).
+
+## Get in touch
+
+kobericafrente2001@gmail.com
