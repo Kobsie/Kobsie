@@ -473,6 +473,7 @@ const SAMPLE_FEW = ["2026-11-28","2026-11-29","2026-12-05","2026-12-10","2026-12
    No prices shown: the only public figures are from 2019 to 2022. Weights are order sizes, the store weighs and confirms. */
 const HAMS = [
   {id:"bone-in", name:"Whole Leg Bone-In Ham", note:"The whole leg on the bone, for the Noche Buena table. Comes with Adelina's sauce.", sizes:["Whole leg"], c:"#1e3b2c", feature:true},
+/* SAMPLE sizes: Adelina's has not published its kilo sizes. Replace with the real ones. */
   {id:"boneless", name:"Boneless Ham", note:"No bone, so it slices cleanly at home.", sizes:["1 kg","1.5 kg","2 kg","3 kg"], c:"#2b4f3b"},
   {id:"sliced", name:"Sliced Ham", note:"Sliced at the store and ready to eat.", sizes:["1/2 kg","1 kg","2 kg"], c:"#3a6149"},
   {id:"chopped", name:"Chopped Ham", note:"Chopped pieces with the same cure and sauce. Good for sandwiches and fried rice.", sizes:["1/2 kg","1 kg","2 kg"], c:"#24432f"},
@@ -492,7 +493,7 @@ photo($("#story-ph"), "story", "The Adelina's Ham store in Mandaluyong");
 $("#hams").innerHTML = HAMS.map(h => {
   const img = PHOTOS[h.id] ? `<img src="${PHOTOS[h.id]}" alt="${h.name}" loading="lazy">` : "";
   const size = h.sizes.length > 1
-    ? `<label>Size<select id="sz-${h.id}">${h.sizes.map(s => `<option>${s}</option>`).join("")}</select></label>`
+    ? `<label>Size (sample)<select id="sz-${h.id}">${h.sizes.map(s => `<option>${s}</option>`).join("")}</select></label>`
     : `<input type="hidden" id="sz-${h.id}" value="${h.sizes[0]}">`;
   return `<article class="ham${h.feature ? " feature" : ""}">
     <div class="ph" style="--c:${h.c}" ${img ? "" : 'aria-hidden="true"'}>${img}</div>

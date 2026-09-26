@@ -769,20 +769,20 @@ $("#f").addEventListener("submit", e => {
     `Feeds: ${g} people`,
     `Flavour: ${state.flavour}`,
     `Frosting colour: ${colourName()}`,
-    data.theme.trim() ? `Design notes: ${data.theme.trim()}` : "",
-    data.inspo.trim() ? `Inspiration: ${data.inspo.trim()}` : "",
-    state.message ? `Message on cake: "${state.message}"` : "",
-    extras.length ? `Also: ${extras.join(", ")}` : "",
+    data.theme.trim() ? `Design notes: ${data.theme.trim()}` : null,
+    data.inspo.trim() ? `Inspiration: ${data.inspo.trim()}` : null,
+    state.message ? `Message on cake: "${state.message}"` : null,
+    extras.length ? `Also: ${extras.join(", ")}` : null,
     ``,
     `Date: ${longDate(d)}`,
     data.mode === "Delivery" ? `Delivery to: ${data.addr.trim()}` : `Pickup at 46 Scout Chuatoco`,
-    data.time.trim() ? `Time: ${data.time.trim()}` : "",
+    data.time.trim() ? `Time: ${data.time.trim()}` : null,
     ``,
     `Name: ${data.name.trim()}`,
     `Mobile: ${data.phone.trim()}`,
     ``,
     `Please send the total and the deposit to hold this date.`,
-  ].filter((l, i, a) => l !== "" || (a[i-1] !== "" && a[i-1] !== undefined));
+  ].filter(l => l !== null);
   const msg = lines.join("\n").trim();
   $("#ref").textContent = ref;
   $("#out").textContent = msg;
