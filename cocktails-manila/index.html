@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<title>Cocktails Manila - Grazing Table and more</title>
+<meta name="description" content="Grazing tables for weddings, debuts and parties across Metro Manila, Bulacan, Rizal and Tagaytay. Plan your table and send the enquiry on Messenger.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<!--
+  Design plan
+  1. Palette "Black and tan": ground #141311, panels #1f1d1a, single accent tan #c8a27a, bone text #efe9e1, muted #aaa197.
+  2. Type: Syne 700/800 for display and the wordmark, Figtree 400 to 700 for body and forms.
+  3. Layout: full-width hero, then one long "table seen from above" made of photo slots of different widths; spreads as a feature block plus a row list; contact as a split.
+  4. The memorable thing: the enquiry flow, where the guest-count slider visibly lengthens the table and shows a length estimate (no prices).
+  5. Theme is locked dark on purpose, in light mode too. This is the one exception to prefers-color-scheme: it is an evening-event brand.
+  6. Radius rule: panels and photo slots 6px, every interactive control is a pill. Motion: only the table growing, plus button feedback.
+
+  Concept preview built by Kobe Ricafrente for Cocktails Manila. Sources: Kobe's prospect research (21 Sep 2026: Malabon,
+  54K followers, 100% of 340 reviews recommend, celebrity weddings, Messenger bookings) and web search results read on
+  26 Sep 2026 (cocktailsmanila.com services page, their Facebook and Instagram, the Before I Do bridal fair listing):
+  the seven spreads and what they include, since 2018, service area, +63 976 341 4436, cocktailsmanila@gmail.com.
+  No prices or package sizes were found, so none are shown. The table-length figure is a planning estimate on this page
+  (about 1 ft per 5 guests, a general grazing-table guide), not a Cocktails Manila rule.
+  To add real photos: fill PHOTOS in the script (keys are the data-photo names). To add the real logo: set LOGO_SRC.
+-->
+<style>
+:root{
+  --ground:#141311;
+  --panel:#1f1d1a;
+  --panel-2:#292621;
+  --line:#3a362f;
+  --bone:#efe9e1;
+  --muted:#aaa197;
+  --tan:#c8a27a;        /* the one accent */
+  --tan-ink:#141311;    /* text on tan */
+  --err:#f0a58f;
+  --focus:#efe9e1;
+  --r:6px;              /* panels and photo slots */
+  --pill:999px;         /* every interactive control */
+  color-scheme:dark;
+}
+/* Locked dark in both schemes on purpose, see plan note 5. Same tokens are restated so nothing flips. */
+@media (prefers-color-scheme: light){:root{--ground:#141311;--panel:#1f1d1a;--bone:#efe9e1;color-scheme:dark}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--ground)}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--ground);color:var(--bone);font-family:"Figtree",system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+@media (max-width:600px){.wrap{padding:0 16px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+h1,h2,h3,.display{font-family:"Syne",system-ui,sans-serif;letter-spacing:-.02em}
+
+/* concept strip */
+.concept{background:var(--tan);color:var(--tan-ink);font-size:14px;padding:8px 0}
+.concept .wrap{display:flex;gap:12px;justify-content:space-between;align-items:center}
+.concept p{margin:0}
+.concept button{background:none;border:1.5px solid currentColor;color:inherit;border-radius:var(--pill);min-height:40px;padding:0 16px;font:inherit;font-weight:600;cursor:pointer;flex:none}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:20;background:rgba(20,19,17,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:"Syne",sans-serif;font-weight:800;font-size:21px;letter-spacing:-.03em;min-height:44px}
+.brand .mark{width:30px;height:10px;border-radius:2px;background:var(--tan);flex:none}
+.brand img{height:40px;width:auto}
+.nav nav{display:flex;align-items:center;gap:28px}
+.nav nav a{text-decoration:none;color:var(--muted);font-weight:500}
+.nav nav a:hover{color:var(--bone)}
+@media (max-width:760px){.nav nav a.hide-m{display:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border:0;border-radius:var(--pill);padding:0 24px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:transform .15s,background-color .2s}
+.btn:active{transform:scale(.98)}
+.btn-tan,.nav nav a.btn-tan{background:var(--tan);color:var(--tan-ink)}
+.btn-tan:hover{background:#d6b28c}
+.btn-line{background:transparent;color:var(--bone);box-shadow:inset 0 0 0 1.5px var(--bone)}
+.btn-line:hover{background:var(--panel-2)}
+
+/* photo slots: designed panels until PHOTOS is filled */
+.ph{position:relative;overflow:hidden;border-radius:var(--r);background-color:var(--c,#2a2622)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph.t-dots{background-image:radial-gradient(circle at 50% 50%,rgba(239,233,225,.13) 0 22%,transparent 24%);background-size:26px 26px}
+.ph.t-fold{background-image:repeating-linear-gradient(115deg,rgba(239,233,225,.08) 0 10px,transparent 10px 22px)}
+.ph.t-leaf{background-image:repeating-linear-gradient(90deg,rgba(239,233,225,.07) 0 2px,transparent 2px 14px),linear-gradient(180deg,rgba(0,0,0,0),rgba(20,19,17,.35))}
+.ph.t-grid{background-image:linear-gradient(rgba(239,233,225,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(239,233,225,.08) 1px,transparent 1px);background-size:30px 30px}
+.ph.t-ring{background-image:radial-gradient(circle,transparent 0 30%,rgba(239,233,225,.1) 31% 38%,transparent 39%);background-size:44px 44px}
+.ph.t-drop{background-image:radial-gradient(ellipse at 30% 30%,rgba(239,233,225,.12),transparent 55%),radial-gradient(ellipse at 75% 70%,rgba(200,162,122,.14),transparent 50%)}
+
+/* hero */
+.hero{padding:56px 0 0}
+.hero h1{font-size:clamp(36px,5.2vw,74px);line-height:1.02;font-weight:800;margin:0 0 20px;max-width:15ch}
+.hero .row{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap}
+.hero p.lede{font-size:19px;color:var(--muted);max-width:44ch;margin:0}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.spread{margin-top:40px;background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0}
+.spread .board{display:grid;grid-template-columns:1.7fr 1fr 2.3fr .8fr 1.5fr 1.1fr 2fr .9fr 1.4fr;gap:10px;height:clamp(150px,20vw,230px);padding:0 14px}
+.spread .board .ph:nth-child(2n){margin:18px 0}
+.spread .board .ph:nth-child(3n){margin:6px 0 24px}
+@media (max-width:900px){.spread .board{grid-template-columns:1.6fr 1fr 2fr .8fr 1.3fr}.spread .board .ph:nth-child(n+6){display:none}}
+@media (max-width:520px){.spread .board{grid-template-columns:1.5fr 1fr 1.8fr}.spread .board .ph:nth-child(n+4){display:none}.hero{padding-top:36px}}
+
+/* proof */
+.proof{padding:72px 0 64px}
+.proof p{font-family:"Syne",sans-serif;font-weight:700;font-size:clamp(24px,3.1vw,40px);line-height:1.2;letter-spacing:-.02em;margin:0;max-width:30ch}
+.proof p span{color:var(--muted)}
+.proof small{display:block;margin-top:16px;color:var(--muted);font-size:14px}
+
+/* spreads */
+section{scroll-margin-top:84px}
+.menu{padding:48px 0 80px}
+h2{font-size:clamp(30px,3.8vw,50px);line-height:1.05;font-weight:800;margin:0 0 12px}
+.intro{color:var(--muted);max-width:56ch;margin:0 0 36px}
+.feature{display:grid;grid-template-columns:1.25fr 1fr;gap:36px;align-items:stretch;background:var(--panel);border-radius:var(--r);padding:16px}
+.feature .ph{min-height:320px}
+.feature .txt{padding:16px 16px 16px 0}
+.feature h3{font-size:30px;margin:0 0 8px;line-height:1.1}
+.feature p{margin:0 0 18px;color:var(--muted)}
+.feature ul{list-style:none;margin:0;padding:0;columns:2;column-gap:24px}
+.feature li{padding:7px 0;break-inside:avoid;border-top:1px solid var(--line)}
+@media (max-width:860px){.feature{grid-template-columns:1fr}.feature .ph{min-height:200px}.feature .txt{padding:4px}}
+@media (max-width:420px){.feature ul{columns:1}}
+.rows{margin-top:40px}
+.rows article{display:grid;grid-template-columns:var(--w,150px) minmax(0,15ch) minmax(0,1fr);gap:28px;align-items:center;padding:20px 0;border-top:1px solid var(--line)}
+.rows .ph{height:92px}
+.rows h3{font-size:22px;margin:0;line-height:1.15}
+.rows p{margin:0;color:var(--muted);max-width:60ch}
+@media (max-width:760px){.rows article{grid-template-columns:96px 1fr;gap:6px 18px}.rows .ph{grid-row:span 2;height:96px}.rows p{font-size:15px}}
+
+/* booking */
+.book{padding:88px 0;background:var(--panel);border-top:1px solid var(--line)}
+.steps{list-style:none;margin:0 0 40px;padding:0;display:flex;flex-wrap:wrap;gap:10px 32px;color:var(--muted);counter-reset:s}
+.steps li{counter-increment:s;display:flex;align-items:center;gap:10px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--tan);color:var(--tan);font-weight:700;font-size:14px}
+
+.stage{background:var(--ground);border-radius:var(--r);padding:22px 20px 18px;margin-bottom:36px;border:1px solid var(--line)}
+.stage .top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.stage .len{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(28px,3.6vw,44px);letter-spacing:-.03em;line-height:1}
+.stage .len small{font-family:"Figtree",sans-serif;font-weight:500;font-size:16px;color:var(--muted);letter-spacing:0;margin-left:8px}
+.lane{position:relative;height:96px}
+.table{height:100%;width:30%;display:flex;gap:6px;padding:8px;background:var(--panel-2);border-radius:var(--r);box-shadow:inset 0 0 0 1px var(--line);transition:width .45s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.table .ph{flex:var(--g,1) 1 0;min-width:8px;border-radius:3px}
+.ruler{display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-size:13px}
+.stage .note{margin:12px 0 0;color:var(--muted);font-size:14px;max-width:70ch}
+@media (max-width:600px){.lane{height:72px}}
+
+.formgrid{display:grid;grid-template-columns:1.25fr .9fr;gap:40px;align-items:start}
+@media (max-width:920px){.formgrid{grid-template-columns:1fr}}
+form .field{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;border:0;padding:0;min-width:0}
+form .l,form legend{font-weight:700;font-size:16px;padding:0}
+form input[type=text],form input[type=tel],form input[type=date],form select,form textarea{font:inherit;color:var(--bone);background:var(--ground);border:1.5px solid #6f685e;border-radius:12px;padding:11px 14px;width:100%;min-height:48px}
+form select option,form select optgroup{background:var(--panel);color:var(--bone)}
+form input:focus,form select:focus,form textarea:focus{outline:2px solid var(--tan);outline-offset:1px;border-color:var(--tan)}
+form [aria-invalid="true"]{border-color:var(--err)}
+form .help{font-size:14px;color:var(--muted)}
+form .error{font-size:14px;color:var(--err);font-weight:600}
+form .error:empty{display:none}
+form .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:560px){form .two{grid-template-columns:1fr}}
+.cap{font-size:15px;padding:12px 14px;border-radius:var(--r);background:var(--ground);border-left:3px solid var(--tan)}
+.cap b{color:var(--tan)}
+
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-track{height:4px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-progress{height:4px;background:var(--tan);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-12px;border-radius:50%;background:var(--tan);border:3px solid var(--ground)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--tan);border:3px solid var(--ground)}
+input[type=range]:focus-visible{outline:2px solid var(--bone);outline-offset:2px}
+.gcount{display:flex;justify-content:space-between;align-items:baseline}
+.gcount output{font-family:"Syne",sans-serif;font-weight:800;font-size:26px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chips span{display:flex;align-items:center;min-height:42px;padding:0 16px;border-radius:var(--pill);box-shadow:inset 0 0 0 1.5px #6f685e;font-weight:500;font-size:15px}
+.chips input:checked + span{background:var(--tan);color:var(--tan-ink);box-shadow:none}
+.chips input:focus-visible + span{outline:2px solid var(--bone);outline-offset:2px}
+
+.summary{position:sticky;top:92px;background:var(--ground);border-radius:var(--r);border:1px solid var(--line);padding:24px}
+.summary h3{margin:0 0 14px;font-size:22px}
+.summary dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px}
+.summary dt{color:var(--muted);font-size:15px}
+.summary dd{margin:0;font-weight:600}
+.summary .send{margin-top:22px;width:100%}
+.summary .error{display:block;margin-top:10px}
+@media (max-width:920px){.summary{position:static}}
+
+.done{display:none;margin-top:28px;background:var(--ground);border-radius:var(--r);border:1px solid var(--tan);padding:24px}
+.done.show{display:block}
+.done h3{margin:0 0 6px;font-size:24px}
+.done p{margin:0;color:var(--muted)}
+.done pre{white-space:pre-wrap;font:inherit;font-size:15px;background:var(--panel);border-radius:var(--r);padding:16px;margin:16px 0;color:var(--bone)}
+.done .ctas{display:flex;gap:10px;flex-wrap:wrap}
+
+/* where */
+.where{padding:88px 0 72px}
+.where .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;margin-top:8px}
+.areas{list-style:none;margin:0;padding:0}
+.areas li{font-family:"Syne",sans-serif;font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1.25;letter-spacing:-.02em}
+.where .kitchen{color:var(--muted);margin:20px 0 0;max-width:44ch}
+.contact h3{font-size:15px;margin:0 0 6px;color:var(--muted);font-family:"Figtree",sans-serif;font-weight:500;letter-spacing:0}
+.contact div + div{margin-top:22px}
+.contact p{margin:0}
+.contact a{display:inline-flex;align-items:center;min-height:40px;font-weight:600;text-decoration-color:var(--tan);text-decoration-thickness:1.5px;text-underline-offset:4px}
+@media (max-width:820px){.where .grid{grid-template-columns:1fr;gap:40px}}
+footer{padding:28px 0 44px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<div class="concept" id="concept" role="note">
+  <div class="wrap">
+    <p>Concept preview made by Kobe Ricafrente for Cocktails Manila. Not the official Cocktails Manila website.</p>
+    <button type="button" onclick="document.getElementById('concept').remove()">Hide</button>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" id="brand" aria-label="Cocktails Manila, home"><span class="mark" aria-hidden="true"></span><span>Cocktails Manila</span></a>
+    <nav aria-label="Main">
+      <a class="hide-m" href="#spreads">Spreads</a>
+      <a class="hide-m" href="#where">Contact</a>
+      <a class="btn btn-tan" href="#plan">Plan your table</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <h1 id="hero-h">Grazing tables, laid long for every guest.</h1>
+      <div class="row">
+        <p class="lede">Cheese, kakanin, street food and desserts on one table. Metro Manila, Bulacan, Rizal and Tagaytay, since 2018.</p>
+        <div class="ctas">
+          <a class="btn btn-tan" href="#plan">Plan your table</a>
+          <a class="btn btn-line" href="#spreads">See the spreads</a>
+        </div>
+      </div>
+    </div>
+    <div class="spread" aria-hidden="true">
+      <div class="board">
+        <div class="ph t-dots" style="--c:#4a3d2c" data-photo="hero-1"></div>
+        <div class="ph t-drop" style="--c:#3b3040" data-photo="hero-2"></div>
+        <div class="ph t-fold" style="--c:#56382f" data-photo="hero-3"></div>
+        <div class="ph t-leaf" style="--c:#2f3a27" data-photo="hero-4"></div>
+        <div class="ph t-ring" style="--c:#3f352a" data-photo="hero-5"></div>
+        <div class="ph t-grid" style="--c:#4b3f31" data-photo="hero-6"></div>
+        <div class="ph t-drop" style="--c:#50342c" data-photo="hero-7"></div>
+        <div class="ph t-dots" style="--c:#353027" data-photo="hero-8"></div>
+        <div class="ph t-fold" style="--c:#453628" data-photo="hero-9"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="proof" aria-label="What people say">
+    <div class="wrap">
+      <p>54K people follow the page. <span>100% of 340 reviewers recommend it.</span> Tables at celebrity weddings, debuts and every occasion in between.</p>
+      <small>Figures from the Cocktails Manila Facebook page, September 2026.</small>
+    </div>
+  </section>
+
+  <section class="menu" id="spreads" aria-labelledby="spreads-h">
+    <div class="wrap">
+      <h2 id="spreads-h">Pick a spread, or mix your own</h2>
+      <p class="intro">Traditional antipasti, Oriental, Mexican, Filipino and trendy food. Every table can be customised to what you want on it.</p>
+
+      <article class="feature" aria-labelledby="gc-h">
+        <div class="ph t-grid" style="--c:#4b3f31" data-photo="grazing-cocktail"></div>
+        <div class="txt">
+          <h3 id="gc-h">Grazing Cocktail</h3>
+          <p>The full mix, savory and sweet on one table.</p>
+          <ul>
+            <li>Fruits platter</li>
+            <li>Dessert shots</li>
+            <li>Cookie platter</li>
+            <li>Sandwich platter</li>
+            <li>Bread station</li>
+            <li>Nacho basket</li>
+            <li>Donut basket</li>
+            <li>Cheese and cracker board</li>
+            <li>Skewer platter</li>
+          </ul>
+        </div>
+      </article>
+
+      <div class="rows">
+        <article style="--w:190px">
+          <div class="ph t-fold" style="--c:#56382f" data-photo="antipasti"></div>
+          <h3>Antipasti Table</h3>
+          <p>A wide spread of cheeses, cold cuts, canapes, fruits and nuts.</p>
+        </article>
+        <article style="--w:130px">
+          <div class="ph t-dots" style="--c:#4a3d2c" data-photo="filipino"></div>
+          <h3>Filipino Spread</h3>
+          <p>Street food favourites: tokneneng, kikiam, squid balls, fish balls, chicken balls and hotdogs.</p>
+        </article>
+        <article style="--w:170px">
+          <div class="ph t-leaf" style="--c:#2f3a27" data-photo="kakanin"></div>
+          <h3>Kakanin Grazing Table</h3>
+          <p>A table of Filipino rice cakes and native sweets.</p>
+        </article>
+        <article style="--w:140px">
+          <div class="ph t-ring" style="--c:#3f352a" data-photo="oriental"></div>
+          <h3>Oriental Spread</h3>
+          <p>Dishes inspired by Chinese, Korean, Thai, Japanese, Vietnamese and Taiwanese food.</p>
+        </article>
+        <article style="--w:180px">
+          <div class="ph t-drop" style="--c:#50342c" data-photo="mexican"></div>
+          <h3>Mexican Spread</h3>
+          <p>Mexican and Oriental flavours together, served with juices.</p>
+        </article>
+        <article style="--w:150px">
+          <div class="ph t-drop" style="--c:#3b3040" data-photo="dessert"></div>
+          <h3>Dessert Spread</h3>
+          <p>Cookie platter, dessert shots, pastries and a chocolate fondue on one table.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="book" id="plan" aria-labelledby="plan-h">
+    <div class="wrap">
+      <h2 id="plan-h">Plan your table</h2>
+      <p class="intro">Tell us the size and the date. You get a written enquiry to send on Messenger, and the team replies with a quote.</p>
+      <ol class="steps">
+        <li>Plan it here</li>
+        <li>Send it on Messenger</li>
+        <li>Get your quote</li>
+        <li>A deposit holds the date</li>
+      </ol>
+
+      <div class="stage" aria-live="polite">
+        <div class="top">
+          <p class="len" style="margin:0"><span id="len-ft">16 ft</span><small id="len-guests">of table for about 80 guests</small></p>
+        </div>
+        <div class="lane"><div class="table" id="table" aria-hidden="true"></div></div>
+        <div class="ruler" aria-hidden="true"><span>20 guests</span><span>300+ guests</span></div>
+        <p class="note">An estimate for planning: about 1 foot of table for every 5 guests. The team confirms the real layout for your venue.</p>
+      </div>
+
+      <form id="f" novalidate>
+        <div class="formgrid">
+          <div>
+            <div class="field">
+              <div class="gcount"><label class="l" for="guests">How many guests</label><output id="gout" for="guests">80</output></div>
+              <input type="range" id="guests" name="guests" min="20" max="300" step="10" value="80" aria-describedby="guests-help">
+              <span class="help" id="guests-help">Slide to your guest count. The table above grows with it.</span>
+            </div>
+
+            <div class="field">
+              <label class="l" for="date">Event date</label>
+              <input type="date" id="date" name="date" required aria-describedby="date-help date-err date-cap">
+              <span class="help" id="date-help">At least 7 days from today.</span>
+              <span class="error" id="date-err"></span>
+              <p class="cap" id="date-cap"><b>One event per day.</b> Each date goes to one event only, and the first confirmed deposit takes it.</p>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label class="l" for="city">Venue city</label>
+                <select id="city" name="city" required aria-describedby="city-help city-err">
+                  <option value="">Choose a city</option>
+                  <optgroup label="Metro Manila">
+                    <option>Caloocan</option><option>Las Piñas</option><option>Makati</option><option>Malabon</option>
+                    <option>Mandaluyong</option><option>Manila</option><option>Marikina</option><option>Muntinlupa</option>
+                    <option>Navotas</option><option>Parañaque</option><option>Pasay</option><option>Pasig</option>
+                    <option>Pateros</option><option>Quezon City</option><option>San Juan</option><option>Taguig</option><option>Valenzuela</option>
+                  </optgroup>
+                  <optgroup label="Outside Metro Manila">
+                    <option>Bulacan</option><option>Rizal</option><option>Tagaytay</option>
+                    <option value="Somewhere else">Somewhere else</option>
+                  </optgroup>
+                </select>
+                <span class="help" id="city-help">We set up across Metro Manila, Bulacan, Rizal and Tagaytay.</span>
+                <span class="error" id="city-err"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="venue">Venue name</label>
+                <input type="text" id="venue" name="venue" aria-describedby="venue-help">
+                <span class="help" id="venue-help">Optional. Hall, garden, home or office.</span>
+              </div>
+            </div>
+
+            <fieldset class="field">
+              <legend id="type-l">Type of event</legend>
+              <div class="chips" id="type-chips">
+                <label><input type="radio" name="type" value="Wedding"><span>Wedding</span></label>
+                <label><input type="radio" name="type" value="Debut"><span>Debut</span></label>
+                <label><input type="radio" name="type" value="Birthday"><span>Birthday</span></label>
+                <label><input type="radio" name="type" value="Corporate event"><span>Corporate event</span></label>
+                <label><input type="radio" name="type" value="Other celebration"><span>Other</span></label>
+              </div>
+              <span class="error" id="type-err"></span>
+            </fieldset>
+
+            <fieldset class="field">
+              <legend>Spreads you like</legend>
+              <span class="help" style="margin-top:-2px">Optional. Pick any, or leave it to the team.</span>
+              <div class="chips" id="spread-chips">
+                <label><input type="checkbox" name="spread" value="Grazing Cocktail"><span>Grazing Cocktail</span></label>
+                <label><input type="checkbox" name="spread" value="Antipasti Table"><span>Antipasti</span></label>
+                <label><input type="checkbox" name="spread" value="Filipino Spread"><span>Filipino</span></label>
+                <label><input type="checkbox" name="spread" value="Kakanin Grazing Table"><span>Kakanin</span></label>
+                <label><input type="checkbox" name="spread" value="Oriental Spread"><span>Oriental</span></label>
+                <label><input type="checkbox" name="spread" value="Mexican Spread"><span>Mexican</span></label>
+                <label><input type="checkbox" name="spread" value="Dessert Spread"><span>Dessert</span></label>
+              </div>
+            </fieldset>
+
+            <div class="two">
+              <div class="field">
+                <label class="l" for="name">Your name</label>
+                <input type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-err">
+                <span class="error" id="name-err"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="phone">Mobile number</label>
+                <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" required aria-describedby="phone-help phone-err">
+                <span class="help" id="phone-help">Like 0917 123 4567.</span>
+                <span class="error" id="phone-err"></span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="l" for="notes">Anything else</label>
+              <textarea id="notes" name="notes" rows="3" aria-describedby="notes-help"></textarea>
+              <span class="help" id="notes-help">Start time, theme or colours, allergies.</span>
+            </div>
+          </div>
+
+          <aside class="summary" aria-labelledby="sum-h">
+            <h3 id="sum-h">Your table so far</h3>
+            <dl>
+              <dt>Guests</dt><dd id="s-guests">About 80</dd>
+              <dt>Table</dt><dd id="s-len">About 16 ft</dd>
+              <dt>Date</dt><dd id="s-date">Not set</dd>
+              <dt>City</dt><dd id="s-city">Not set</dd>
+              <dt>Event</dt><dd id="s-type">Not set</dd>
+              <dt>Spreads</dt><dd id="s-spread">Team's choice</dd>
+            </dl>
+            <button class="btn btn-tan send" type="submit">Write my enquiry</button>
+            <span class="error" id="form-err" role="alert"></span>
+          </aside>
+        </div>
+
+        <div class="done" id="done" tabindex="-1" aria-labelledby="done-h">
+          <h3 id="done-h">Enquiry <span id="ref"></span> is ready to send</h3>
+          <p>Copy it, then paste it into Messenger. Cocktails Manila replies with your quote and how to pay the deposit.</p>
+          <pre id="msg"></pre>
+          <div class="ctas">
+            <button class="btn btn-tan" type="button" id="copy">Copy enquiry</button>
+            <a class="btn btn-line" href="https://m.me/cocktailsmanila" rel="noopener" target="_blank">Open Messenger</a>
+            <a class="btn btn-line" id="mail" href="mailto:cocktailsmanila@gmail.com">Email it</a>
+            <a class="btn btn-line" id="sms" href="sms:+639763414436">Text it</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="where" id="where" aria-labelledby="where-h">
+    <div class="wrap">
+      <h2 id="where-h">Where we set up</h2>
+      <div class="grid">
+        <div>
+          <ul class="areas">
+            <li>Metro Manila</li>
+            <li>Bulacan</li>
+            <li>Rizal</li>
+            <li>Tagaytay</li>
+          </ul>
+          <p class="kitchen">Based in Malabon. There is also a Cocktails Manila Tagaytay page, based in Silang.</p>
+        </div>
+        <div class="contact">
+          <div>
+            <h3>Messenger, for bookings</h3>
+            <p><a href="https://m.me/cocktailsmanila" rel="noopener" target="_blank">m.me/cocktailsmanila</a></p>
+          </div>
+          <div>
+            <h3>Phone and email</h3>
+            <p><a href="tel:+639763414436">0976 341 4436</a></p>
+            <p><a href="mailto:cocktailsmanila@gmail.com">cocktailsmanila@gmail.com</a></p>
+          </div>
+          <div>
+            <h3>Follow</h3>
+            <p><a href="https://www.facebook.com/cocktailsmanila" rel="noopener">Facebook</a></p>
+            <p><a href="https://www.instagram.com/cocktails.manila/" rel="noopener">Instagram @cocktails.manila</a></p>
+            <p><a href="https://www.tiktok.com/@_cocktailsmanila" rel="noopener">TikTok @_cocktailsmanila</a></p>
+            <p><a href="https://www.facebook.com/cocktailsmanila.tagaytay/" rel="noopener">Cocktails Manila Tagaytay</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Cocktails Manila, Grazing Table and more. Malabon. Concept site by Kobe Ricafrente.</div>
+</footer>
+
+<script>
+/* Swap-in points. Put real files next to this page and fill these in. */
+const LOGO_SRC = "";   // e.g. "logo.png"
+const PHOTOS = {};     // keys are the data-photo names, e.g. { "hero-1": "photos/wedding-table.jpg", "antipasti": "photos/antipasti.jpg" }
+
+const SHOP = {
+  name: "Cocktails Manila",
+  leadDays: 7,          // concept default, confirm with the owner
+  perDay: 1,            // one event per day, the cap Kobe's system would enforce
+  fullDates: [],        // "YYYY-MM-DD" dates already holding a deposit. Empty in this preview.
+  ftPerGuests: 5,       // planning estimate: about 1 ft of table per 5 guests
+  phone: "+639763414436",
+  email: "cocktailsmanila@gmail.com",
+};
+
+const $ = (s, el = document) => el.querySelector(s);
+
+if (LOGO_SRC) { $("#brand").innerHTML = `<img src="${LOGO_SRC}" alt="Cocktails Manila">`; }
+document.querySelectorAll("[data-photo]").forEach(el => {
+  const src = PHOTOS[el.dataset.photo];
+  if (src) { el.innerHTML = `<img src="${src}" alt="" loading="lazy">`; }
+});
+
+/* the growing table */
+const TILE = [
+  ["#4a3d2c","t-dots",1.6],["#56382f","t-fold",1],["#2f3a27","t-leaf",2.1],["#3b3040","t-drop",.8],
+  ["#3f352a","t-ring",1.4],["#4b3f31","t-grid",1.1],["#50342c","t-drop",1.8],["#353027","t-dots",.9],["#453628","t-fold",1.3]
+];
+const table = $("#table");
+const guests = $("#guests");
+function feet(n){ return Math.max(4, Math.ceil(n / SHOP.ftPerGuests)); }
+function drawTable(){
+  const n = +guests.value, ft = feet(n);
+  const tiles = Math.max(3, Math.round(ft / 2.2));
+  if (table.childElementCount !== tiles){
+    table.innerHTML = Array.from({length:tiles}, (_, i) => {
+      const [c, t, g] = TILE[i % TILE.length];
+      return `<div class="ph ${t}" style="--c:${c};--g:${g}"></div>`;
+    }).join("");
+  }
+  const pct = 18 + (n - 20) / 280 * 82;
+  table.style.width = Math.min(100, pct) + "%";
+  $("#len-ft").textContent = `About ${ft} ft`;
+  $("#len-guests").textContent = `of table for about ${n}${n >= 300 ? "+" : ""} guests`;
+  $("#gout").textContent = n >= 300 ? "300+" : n;
+  $("#s-guests").textContent = `About ${n}${n >= 300 ? "+" : ""}`;
+  $("#s-len").textContent = `About ${ft} ft (${(ft * 0.3048).toFixed(1)} m)`;
+}
+guests.addEventListener("input", drawTable);
+
+/* date rules */
+function iso(d){ return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function earliest(){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() + SHOP.leadDays); return d; }
+const fmtLong = d => d.toLocaleDateString("en-PH", {weekday:"long", month:"long", day:"numeric", year:"numeric"});
+const fmtShort = d => d.toLocaleDateString("en-PH", {weekday:"short", month:"short", day:"numeric"});
+$("#date").min = iso(earliest());
+function dateProblem(v){
+  if (!v) return "Choose the date of your event.";
+  const d = new Date(v + "T00:00");
+  if (d < earliest()) return `That is less than ${SHOP.leadDays} days away. Pick ${earliest().toLocaleDateString("en-PH",{month:"long",day:"numeric"})} or later.`;
+  if (SHOP.fullDates.includes(v)) return "That date already has an event. We take one event per day, so pick another date.";
+  return "";
+}
+function capMessage(){
+  const v = $("#date").value, p = v ? dateProblem(v) : "";
+  if (v && !p){
+    $("#date-cap").innerHTML = `<b>${fmtLong(new Date(v + "T00:00"))} is open.</b> We take one event per day, so the first confirmed deposit takes it.`;
+  } else {
+    $("#date-cap").innerHTML = `<b>One event per day.</b> Each date goes to one event only, and the first confirmed deposit takes it.`;
+  }
+}
+
+/* live summary */
+const f = $("#f");
+function values(){
+  const fd = new FormData(f);
+  return {
+    guests: +fd.get("guests"), date: fd.get("date") || "", city: fd.get("city") || "",
+    venue: (fd.get("venue") || "").trim(), type: fd.get("type") || "",
+    spreads: fd.getAll("spread"), name: (fd.get("name") || "").trim(),
+    phone: (fd.get("phone") || "").trim(), notes: (fd.get("notes") || "").trim()
+  };
+}
+function summary(){
+  const v = values();
+  $("#s-date").textContent = v.date ? fmtShort(new Date(v.date + "T00:00")) : "Not set";
+  $("#s-city").textContent = v.city || "Not set";
+  $("#s-type").textContent = v.type || "Not set";
+  $("#s-spread").textContent = v.spreads.length ? v.spreads.join(", ") : "Team's choice";
+}
+f.addEventListener("input", e => { summary(); if (e.target.id === "date") { capMessage(); } });
+f.addEventListener("change", e => {
+  summary();
+  if (e.target.id === "date") { capMessage(); setErr("date", dateProblem(e.target.value)); }
+  if (e.target.id === "city") { $("#city-help").textContent = e.target.value === "Somewhere else" ? "Outside the usual area. Send it anyway and the team will say if they can travel there." : "We set up across Metro Manila, Bulacan, Rizal and Tagaytay."; }
+});
+
+function setErr(id, msg){
+  $("#" + id + "-err").textContent = msg;
+  const el = id === "type" ? $("#type-chips input") : $("#" + id);
+  if (id === "type") { document.querySelectorAll("#type-chips input").forEach(i => i.setAttribute("aria-invalid", msg ? "true" : "false")); }
+  else if (el) { el.setAttribute("aria-invalid", msg ? "true" : "false"); }
+  return !msg;
+}
+
+f.addEventListener("submit", e => {
+  e.preventDefault();
+  const v = values();
+  let ok = true;
+  ok = setErr("date", dateProblem(v.date)) && ok;
+  ok = setErr("city", v.city ? "" : "Choose the city of the venue.") && ok;
+  ok = setErr("type", v.type ? "" : "Choose the type of event.") && ok;
+  ok = setErr("name", v.name ? "" : "Add your name.") && ok;
+  ok = setErr("phone", /^(\+?63|0)9\d{2}[\s-]?\d{3}[\s-]?\d{4}$/.test(v.phone) ? "" : "Use a PH mobile number, like 0917 123 4567.") && ok;
+  if (!ok){
+    $("#form-err").textContent = "A few details are missing. They are marked above.";
+    const first = f.querySelector('[aria-invalid="true"]'); if (first) first.focus();
+    return;
+  }
+  $("#form-err").textContent = "";
+
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const ref = "CM-" + Array.from({length:4}, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  const ft = feet(v.guests);
+  const msg = [
+    `Hi Cocktails Manila! Grazing table enquiry ${ref}`,
+    "",
+    `Event: ${v.type}`,
+    `Date: ${fmtLong(new Date(v.date + "T00:00"))}`,
+    `Venue: ${v.venue ? v.venue + ", " : ""}${v.city}`,
+    `Guests: about ${v.guests}${v.guests >= 300 ? "+" : ""}`,
+    `Table: about ${ft} ft (estimate from your website)`,
+    `Spreads: ${v.spreads.length ? v.spreads.join(", ") : "please suggest"}`,
+    "",
+    `Name: ${v.name}`,
+    `Mobile: ${v.phone}`,
+    v.notes ? `Notes: ${v.notes}` : "",
+    "",
+    "Could you send me a quote and how to pay the deposit to hold the date? Thank you."
+  ].filter((x, i, a) => !(x === "" && a[i - 1] === "")).join("\n");
+
+  $("#ref").textContent = ref;
+  $("#msg").textContent = msg;
+  $("#mail").href = `mailto:${SHOP.email}?subject=${encodeURIComponent("Grazing table enquiry " + ref)}&body=${encodeURIComponent(msg)}`;
+  $("#sms").href = `sms:${SHOP.phone}?&body=${encodeURIComponent(msg)}`;
+  $("#copy").textContent = "Copy enquiry";
+  $("#done").classList.add("show");
+  $("#done").focus();
+});
+
+$("#copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("#msg").textContent); $("#copy").textContent = "Copied"; }
+  catch { $("#copy").textContent = "Select the text above to copy"; }
+});
+
+drawTable(); summary();
+</script>
+</body>
+</html>

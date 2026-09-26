@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hizon's Cakes &amp; Pastries</title>
+<meta name="description" content="Hizon's Cakes and Pastries, Ermita, Manila, since 1946. Request a custom cake quote or pre-order ensaymada for pickup in Ermita or GH Mall.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  DESIGN PLAN
+  1. Palette: navy #1c2847 (text, blocks), blush #f3d6d2 (the one accent), white #ffffff ground, pale grey #f2f3f6 panels. Dark: navy-black #0e1322 ground, #eef0f6 text, same blush.
+  2. Type: EB Garamond for display (a 1946 Manila patisserie, heritage is the point), Work Sans for body and every control.
+  3. Layout: left-aligned hero, right column is a two-store switcher (Ermita / GH Mall) that rewrites address, hours and earliest pickup dates.
+  4. The memorable thing: a custom-cake quote builder whose live "order slip" fills in as you choose, then becomes a quote request with a reference.
+  5. Everyday classics (ensaymada, chiffon, breads) sit in a separate, shorter pre-order list for pickup.
+  6. One radius (4px) on everything, hairlines only where they separate real content, one motion moment: the slip stamping its reference.
+
+  FACTS AND SOURCES (checked 26 Sep 2026)
+  Kobe's prospect research (21 Sep 2026): since 1946, Ermita plus GH Mall store since 29 Jun 2026, custom cakes by Messenger, phone or email, pickup only, Facebook page facebook.com/Hizons.
+  Web search results: 1197 J. Bocobo St. corner Arquiza St., Ermita (Yelp, Yellow Pages PH); phone 8524 8790 and Viber 0917 536 6241, no delivery (Tripadvisor, ClickTheCity);
+  open daily 8 AM to 9 PM (Yelp listing summary); founded 1946 by Inocencia Hizon-Ramos (Lola Sesing) and her sister Paz on Raon St., Quiapo, near the Globe Theatre,
+  moved to J. Bocobo St. in the 1960s (The Urban Roamer); product names from Rappler, Wanderlog, Tripadvisor and Hizon's own Facebook posts.
+  GH Mall address from Ortigas Land (GH Mall, Ortigas Avenue, San Juan). GH Mall store hours and exact unit were not found, so the page says to call ahead.
+  NOT shown on purpose: prices (only undated "around" figures were found), an email address (none found), cake sizes (none published).
+  Lead times (3 days for custom cakes, next day for everyday items) are settings in SHOP below, not published Hizon's policy. Confirm with the shop.
+  Hizon's Catering is a separate business and is not on this page.
+
+  TO SWAP IN THE REAL LOGO AND PHOTOS: put the files next to this page and fill LOGO_SRC and PHOTOS at the top of the script.
+  Until then each photo slot renders as a designed pattern panel.
+-->
+<style>
+:root{
+  --ground:#ffffff;
+  --ink:#1c2847;
+  --muted:#4a5472;
+  --panel:#f2f3f6;
+  --line:#d6d9e2;
+  --field:#7a8199;
+  --blush:#f3d6d2;
+  --on-blush:#1c2847;
+  --block:#1c2847;
+  --on-block:#ffffff;
+  --focus:#1c2847;
+  --err:#a32117;
+  --r:4px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ground:#0e1322;
+    --ink:#eef0f6;
+    --muted:#b0b7cc;
+    --panel:#161d31;
+    --line:#2b3450;
+    --field:#7d86a3;
+    --blush:#f3d6d2;
+    --on-blush:#1c2847;
+    --block:#1c2847;
+    --on-block:#eef0f6;
+    --focus:#f3d6d2;
+    --err:#ffa89f;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Work Sans",system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.serif{font-family:"EB Garamond",Georgia,serif}
+h1,h2,h3{font-family:"EB Garamond",Georgia,serif;font-weight:500;letter-spacing:-.01em;margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* concept strip */
+.concept{background:var(--blush);color:var(--on-blush);font-size:14px;padding:6px 0}
+.concept .wrap{display:flex;gap:12px;justify-content:space-between;align-items:center}
+.concept p{margin:0}
+.concept button{background:none;border:1px solid currentColor;color:inherit;border-radius:var(--r);min-height:40px;padding:0 14px;font:inherit;cursor:pointer;flex:none}
+
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:var(--ground);border-bottom:1px solid var(--line)}
+header.top .wrap{height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;min-height:40px;align-items:center}
+.brand b{font-family:"EB Garamond",Georgia,serif;font-weight:500;font-size:30px;letter-spacing:-.01em;line-height:1}
+.brand span{font-size:13px;color:var(--muted);line-height:1.2}
+.brand img{height:44px;width:auto}
+header nav{display:flex;align-items:center;gap:26px}
+header nav a{text-decoration:none;color:var(--muted);font-size:15px;min-height:40px;display:inline-flex;align-items:center}
+header nav a:hover{color:var(--ink)}
+@media (max-width:860px){header nav a.hide-m{display:none}.brand span{display:none}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:var(--r);border:0;font:inherit;font-weight:500;font-size:16px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-ink{background:var(--block);color:var(--on-block)}
+header nav a.btn-ink,header nav a.btn-ink:hover{color:var(--on-block)}
+.btn-blush{background:var(--blush);color:var(--on-blush)}
+.btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px currentColor}
+@media (prefers-color-scheme: dark){
+  .btn-ink{background:var(--blush);color:var(--on-blush)}
+  header nav a.btn-ink,header nav a.btn-ink:hover{color:var(--on-blush)}
+}
+
+/* photo slots: pattern panels until PHOTOS is filled */
+.ph{position:relative;overflow:hidden;border-radius:var(--r)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph-doily{background:
+  radial-gradient(circle at 50% 50%, transparent 0 58%, var(--blush) 58.5% 59.2%, transparent 59.7%),
+  radial-gradient(circle at 50% 50%, transparent 0 44%, var(--blush) 44.5% 45%, transparent 45.5%),
+  radial-gradient(circle at 50% 0, var(--blush) 0 5px, transparent 6px) 0 100%/18px 18px repeat-x,
+  radial-gradient(circle, rgba(243,214,210,.28) 1.4px, transparent 2px) 0 0/14px 14px,
+  #1c2847}
+.ph-coil{background:repeating-radial-gradient(circle at 48% 56%, #1c2847 0 2px, transparent 2.5px 15px),#f3d6d2}
+.ph-stripe{background:repeating-linear-gradient(90deg,#f3d6d2 0 22px,#1c2847 22px 24px,#f3d6d2 24px 46px,#ffffff 46px 48px)}
+
+/* hero */
+.hero{padding:56px 0 64px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center}
+.hero h1{font-size:clamp(44px,5.4vw,74px);line-height:1.02;max-width:13ch;margin-bottom:22px}
+.hero p.lede{font-size:19px;color:var(--muted);max-width:40ch;margin:0 0 30px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.stores{display:grid;grid-template-rows:auto auto}
+.stores .ph{aspect-ratio:16/10}
+.switch{background:var(--panel);border-radius:var(--r);padding:22px 24px 24px;margin:-48px 24px 0;position:relative;box-shadow:0 12px 30px rgba(28,40,71,.14)}
+@media (prefers-color-scheme: dark){.switch{box-shadow:0 12px 30px rgba(0,0,0,.35)}}
+.seg{display:flex;gap:4px;padding:4px;background:var(--ground);border-radius:var(--r);margin-bottom:18px}
+.seg button{flex:1;min-height:42px;border:0;border-radius:var(--r);background:transparent;color:var(--muted);font:inherit;font-weight:500;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--block);color:var(--on-block)}
+@media (prefers-color-scheme: dark){.seg button[aria-pressed="true"]{background:var(--blush);color:var(--on-blush)}}
+.switch h2{font-size:26px;line-height:1.15;margin-bottom:4px}
+.switch p{margin:0;color:var(--muted);font-size:15px}
+.switch dl{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin:16px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+.switch dt{font-size:13px;color:var(--muted)}
+.switch dd{margin:0;font-family:"EB Garamond",Georgia,serif;font-size:22px;line-height:1.2}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:36px}.hero{padding:36px 0 48px}}
+@media (max-width:480px){.switch{margin:-32px 10px 0;padding:18px}.switch dl{grid-template-columns:1fr}}
+
+section{scroll-margin-top:84px}
+.sec-h{font-size:clamp(34px,4vw,50px);line-height:1.08;margin-bottom:12px}
+.sec-p{color:var(--muted);max-width:58ch;margin:0}
+
+/* custom cake builder */
+.cakes{padding:80px 0;background:var(--panel)}
+.cakes .head{margin-bottom:36px}
+.steps{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 28px;counter-reset:s;font-size:15px}
+.steps li{counter-increment:s;display:flex;align-items:center;gap:10px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--blush);color:var(--on-blush);font-weight:600;font-size:14px}
+.builder{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:40px;align-items:start}
+.builder form{background:var(--ground);border-radius:var(--r);padding:32px}
+fieldset{border:0;margin:0 0 28px;padding:0 0 28px;border-bottom:1px solid var(--line);min-width:0}
+fieldset:last-of-type{border-bottom:0;padding-bottom:0}
+legend{font-family:"EB Garamond",Georgia,serif;font-size:26px;line-height:1.2;padding:0;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;min-width:0}
+.field:last-child{margin-bottom:0}
+.l{font-weight:600;font-size:15px}
+.help{font-size:14px;color:var(--muted)}
+.error{font-size:14px;color:var(--err);font-weight:500}
+.error:empty{display:none}
+input[type=text],input[type=tel],input[type=date],select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--ground);border:1.5px solid var(--field);border-radius:var(--r);padding:10px 12px;min-height:46px;width:100%}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--focus);outline-offset:1px}
+[aria-invalid="true"]{border-color:var(--err)!important}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0;margin:0}
+.chips span{display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border-radius:var(--r);border:1.5px solid var(--field);cursor:pointer;font-size:15px}
+.chips input:checked + span{background:var(--block);border-color:var(--block);color:var(--on-block)}
+@media (prefers-color-scheme: dark){.chips input:checked + span{background:var(--blush);border-color:var(--blush);color:var(--on-blush)}}
+.chips input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.chips.bad span{border-color:var(--err)}
+.file{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.file input{font:inherit;font-size:15px;max-width:100%}
+.file input::file-selector-button{font:inherit;min-height:42px;padding:0 14px;border-radius:var(--r);border:1.5px solid var(--field);background:var(--panel);color:var(--ink);cursor:pointer;margin-right:10px}
+.thumb{width:64px;height:64px;border-radius:var(--r);object-fit:cover;display:none}
+.thumb.show{display:block}
+
+/* the slip */
+.slip-col{position:sticky;top:92px}
+.slip{background:var(--block);color:var(--on-block);border-radius:var(--r);padding:28px 28px 24px;position:relative}
+.slip::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px;background:radial-gradient(circle at 50% 100%, var(--block) 0 5px, transparent 5.5px) 0 0/16px 8px repeat-x}
+.slip h3{font-size:28px;line-height:1.1;margin-bottom:4px}
+.slip .sub{font-size:14px;color:#c9cee0;margin:0 0 18px}
+.slip dl{margin:0}
+.slip .row{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:9px 0;border-top:1px solid rgba(243,214,210,.22);font-size:15px}
+.slip dt{color:#c9cee0}
+.slip dd{margin:0;overflow-wrap:anywhere}
+.slip dd.empty{color:#9aa2bd;font-style:italic}
+.slip .note{font-size:14px;color:#c9cee0;margin:16px 0 0}
+.stamp{display:none;font-family:"EB Garamond",Georgia,serif;font-size:22px;background:var(--blush);color:var(--on-blush);border-radius:var(--r);padding:6px 14px;margin:0 0 14px;width:max-content;max-width:100%}
+.slip.sent .stamp{display:block;animation:stamp .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes stamp{from{transform:scale(1.5) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
+.result{display:none;margin-top:18px;background:var(--ground);color:var(--ink);border-radius:var(--r);padding:20px}
+.result.show{display:block}
+.result h3{font-size:24px;margin-bottom:6px}
+.result p{margin:0 0 10px;font-size:15px;color:var(--muted)}
+.result pre{white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.5;background:var(--panel);border-radius:var(--r);padding:14px;margin:0 0 14px;max-height:320px;overflow:auto}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.actions .btn{min-height:44px;padding:0 16px;font-size:15px}
+@media (max-width:980px){.builder{grid-template-columns:1fr}.slip-col{position:static}}
+@media (max-width:480px){.builder form{padding:20px}.slip{padding:22px 18px 20px}.slip .row{grid-template-columns:92px 1fr}}
+
+/* everyday */
+.everyday{padding:80px 0}
+.everyday .grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:start;margin-top:36px}
+.feature .ph{aspect-ratio:4/5}
+.feature p{font-size:15px;color:var(--muted);margin:14px 0 0;max-width:40ch}
+.items{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;column-gap:32px}
+.items li{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+.items h3{font-size:22px;line-height:1.15}
+.items p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.qty{display:inline-flex;align-items:center;gap:4px;flex:none}
+.qty button{width:40px;height:40px;border-radius:var(--r);border:1.5px solid var(--field);background:transparent;color:var(--ink);font:inherit;font-size:20px;line-height:1;cursor:pointer}
+.qty output{min-width:28px;text-align:center;font-weight:600}
+.items li.on output{background:var(--blush);color:var(--on-blush);border-radius:var(--r);padding:2px 0}
+.po{margin-top:32px;background:var(--panel);border-radius:var(--r);padding:28px}
+.po h3{font-size:26px;margin-bottom:16px}
+.po .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.po .two + .two{margin-top:0}
+@media (max-width:980px){.everyday .grid{grid-template-columns:1fr}.feature{display:grid;grid-template-columns:160px 1fr;gap:20px;align-items:end}.feature .ph{aspect-ratio:1}}
+@media (max-width:720px){.items{grid-template-columns:1fr}.po .three{grid-template-columns:1fr}}
+@media (max-width:480px){.feature{grid-template-columns:110px 1fr}.po{padding:20px}}
+
+/* story */
+.story{padding:80px 0;background:var(--panel)}
+.story .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
+.story .ph{aspect-ratio:5/4;margin-top:24px}
+.timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--blush)}
+.timeline li{padding:0 0 30px 26px;position:relative}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{content:"";position:absolute;left:-7px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--blush)}
+.timeline b{display:block;font-family:"EB Garamond",Georgia,serif;font-weight:500;font-size:44px;line-height:1.1}
+.timeline p{margin:4px 0 0;color:var(--muted);max-width:52ch}
+@media (max-width:900px){.story .wrap{grid-template-columns:1fr;gap:36px}}
+
+/* visit */
+.visit{padding:80px 0}
+.visit .grid{display:grid;grid-template-columns:1fr 1fr .9fr;gap:40px;margin-top:32px}
+.visit h3{font-size:26px;margin-bottom:8px}
+.visit p{margin:0 0 4px}
+.visit .m{color:var(--muted);font-size:15px}
+.visit a{font-weight:500}
+.visit .links p{margin-bottom:8px}
+.visit .links a{display:inline-flex;align-items:center;min-height:40px}
+@media (max-width:860px){.visit .grid{grid-template-columns:1fr;gap:28px}}
+footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="concept" id="concept" role="note">
+  <div class="wrap">
+    <p>Concept preview made by Kobe Ricafrente for Hizon's Cakes &amp; Pastries. Not the official Hizon's Cakes &amp; Pastries website.</p>
+    <button type="button" onclick="document.getElementById('concept').remove()">Hide</button>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" id="brand" aria-label="Hizon's Cakes and Pastries, home"><b>Hizon's</b><span>Cakes &amp; Pastries<br>since 1946</span></a>
+    <nav aria-label="Main">
+      <a class="hide-m" href="#everyday">Everyday classics</a>
+      <a class="hide-m" href="#story">Since 1946</a>
+      <a class="hide-m" href="#visit">Stores</a>
+      <a class="btn btn-ink" href="#cakes">Request a quote</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <div>
+        <h1 id="hero-h">Cakes and ensaymada in Manila since 1946.</h1>
+        <p class="lede">Describe a custom cake and our bakers send you a quote, or pre-order the classics for pickup.</p>
+        <div class="ctas">
+          <a class="btn btn-ink" href="#cakes">Request a quote</a>
+          <a class="btn btn-line" href="#everyday">Pre-order classics</a>
+        </div>
+      </div>
+      <div class="stores">
+        <div class="ph ph-doily" data-photo="hero" aria-hidden="true"></div>
+        <div class="switch" role="region" aria-labelledby="store-h">
+          <div class="seg" role="group" aria-label="Choose a store">
+            <button type="button" data-store="ermita" aria-pressed="true">Ermita</button>
+            <button type="button" data-store="gh" aria-pressed="false">GH Mall</button>
+          </div>
+          <div aria-live="polite">
+            <h2 id="store-h">Hizon's Ermita</h2>
+            <p id="store-addr">1197 J. Bocobo St., Ermita, Manila</p>
+            <dl>
+              <div><dt>Custom cake pickup from</dt><dd id="store-cake">...</dd></div>
+              <div><dt>Everyday pre-orders from</dt><dd id="store-day">...</dd></div>
+              <div><dt>Hours</dt><dd id="store-hours">...</dd></div>
+              <div><dt>Pickup</dt><dd>At the counter</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cakes" id="cakes" aria-labelledby="cakes-h">
+    <div class="wrap">
+      <div class="head">
+        <h2 class="sec-h" id="cakes-h">Request a custom cake quote</h2>
+        <p class="sec-p">Every custom cake at Hizon's is priced by hand. Tell us what you have in mind and we reply with the price and the pickup details.</p>
+        <ol class="steps">
+          <li>Describe the cake</li>
+          <li>Hizon's replies with a quote</li>
+          <li>Confirm, then pick up on your date</li>
+        </ol>
+      </div>
+
+      <div class="builder">
+        <form id="cf" novalidate>
+          <fieldset>
+            <legend>The occasion</legend>
+            <div class="field">
+              <span class="l" id="occ-l">What is it for?</span>
+              <div class="chips" id="occ" role="radiogroup" aria-labelledby="occ-l" aria-describedby="occ-err"></div>
+              <span class="error" id="occ-err" role="alert"></span>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label class="l" for="serves">How many people?</label>
+                <select id="serves" name="serves" aria-describedby="serves-help serves-err">
+                  <option value="">Choose</option>
+                  <option>Up to 10</option>
+                  <option>11 to 20</option>
+                  <option>21 to 40</option>
+                  <option>41 to 80</option>
+                  <option>More than 80</option>
+                </select>
+                <span class="help" id="serves-help">Hizon's suggests the size when they quote.</span>
+                <span class="error" id="serves-err" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="tiers">Tiers</label>
+                <select id="tiers" name="tiers">
+                  <option>Let Hizon's suggest</option>
+                  <option>1 tier</option>
+                  <option>2 tiers</option>
+                  <option>3 tiers</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>The cake</legend>
+            <div class="field">
+              <label class="l" for="flavour">Flavour</label>
+              <select id="flavour" name="flavour" aria-describedby="flavour-err"></select>
+              <span class="error" id="flavour-err" role="alert"></span>
+            </div>
+            <div class="field">
+              <label class="l" for="dedication">Message on the cake</label>
+              <input type="text" id="dedication" name="dedication" maxlength="60" aria-describedby="ded-help">
+              <span class="help" id="ded-help">Optional. Up to 60 characters.</span>
+            </div>
+            <div class="field">
+              <label class="l" for="design">Design notes</label>
+              <textarea id="design" name="design" rows="3" aria-describedby="design-help design-err"></textarea>
+              <span class="help" id="design-help">Colours, theme, toppers, anything we should copy or avoid.</span>
+              <span class="error" id="design-err" role="alert"></span>
+            </div>
+            <div class="field">
+              <label class="l" for="photo">Reference photo</label>
+              <div class="file">
+                <input type="file" id="photo" name="photo" accept="image/*" aria-describedby="photo-help photo-err">
+                <img class="thumb" id="thumb" alt="Your reference photo">
+              </div>
+              <span class="help" id="photo-help">Optional. It stays on your phone. Send it in the chat with your request.</span>
+              <span class="error" id="photo-err" role="alert"></span>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Pickup</legend>
+            <div class="field">
+              <span class="l" id="cstore-l">Store</span>
+              <div class="chips" role="radiogroup" aria-labelledby="cstore-l">
+                <label><input type="radio" name="store" value="ermita" checked><span>Ermita</span></label>
+                <label><input type="radio" name="store" value="gh"><span>GH Mall</span></label>
+              </div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label class="l" for="cdate">Pickup date</label>
+                <input type="date" id="cdate" name="date" aria-describedby="cdate-help cdate-err">
+                <span class="help" id="cdate-help">...</span>
+                <span class="error" id="cdate-err" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="cwin">Pickup time</label>
+                <select id="cwin" name="win" aria-describedby="cwin-help cwin-err"></select>
+                <span class="help" id="cwin-help"></span>
+                <span class="error" id="cwin-err" role="alert"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Your details</legend>
+            <div class="two">
+              <div class="field">
+                <label class="l" for="cname">Name</label>
+                <input type="text" id="cname" name="name" autocomplete="name" aria-describedby="cname-err">
+                <span class="error" id="cname-err" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="cphone">Mobile number</label>
+                <input type="tel" id="cphone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="cphone-help cphone-err">
+                <span class="help" id="cphone-help">Hizon's sends the quote here.</span>
+                <span class="error" id="cphone-err" role="alert"></span>
+              </div>
+            </div>
+            <button class="btn btn-ink" type="submit">Prepare my quote request</button>
+          </fieldset>
+        </form>
+
+        <div class="slip-col">
+          <div class="slip" id="slip">
+            <p class="stamp" id="stamp"></p>
+            <h3>Quote request</h3>
+            <p class="sub">Fills in as you choose. Not an order until Hizon's confirms the price.</p>
+            <dl id="slip-list"></dl>
+            <p class="note">No payment here. Hizon's replies with the price and how to confirm.</p>
+          </div>
+          <div class="result" id="cres" tabindex="-1" aria-live="polite">
+            <h3>Request <span id="cref"></span> is ready</h3>
+            <p>Copy it, then send it on Messenger or Viber with your reference photo. Or text it straight away.</p>
+            <pre id="cmsg"></pre>
+            <div class="actions">
+              <button class="btn btn-ink" type="button" data-copy="cmsg">Copy request</button>
+              <a class="btn btn-line" href="https://m.me/Hizons" target="_blank" rel="noopener">Open Messenger</a>
+              <a class="btn btn-line" href="viber://chat?number=%2B639175366241">Open Viber</a>
+              <a class="btn btn-line" id="csms" href="sms:+639175366241">Send by SMS</a>
+              <a class="btn btn-line" href="tel:+63285248790">Call Ermita</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="everyday" id="everyday" aria-labelledby="ev-h">
+    <div class="wrap">
+      <h2 class="sec-h" id="ev-h">Everyday classics, set aside for you</h2>
+      <p class="sec-p">The ensaymada, chiffons and breads Hizon's is known for. Reserve them for pickup and skip the wait at the counter.</p>
+      <div class="grid">
+        <div class="feature">
+          <div class="ph ph-coil" data-photo="ensaymada" aria-hidden="true"></div>
+          <p>Hizon's traces its ensaymada and mocha chiffon cake back to Lola Sesing's first bakeshop in 1946.</p>
+        </div>
+        <div>
+          <ul class="items" id="items"></ul>
+          <form class="po" id="pf" novalidate>
+            <h3>Pickup details</h3>
+            <span class="error" id="items-err" role="alert"></span>
+            <div class="three">
+              <div class="field">
+                <label class="l" for="pstore">Store</label>
+                <select id="pstore" name="store">
+                  <option value="ermita">Ermita</option>
+                  <option value="gh">GH Mall</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="l" for="pdate">Pickup date</label>
+                <input type="date" id="pdate" name="date" aria-describedby="pdate-help pdate-err">
+                <span class="help" id="pdate-help">...</span>
+                <span class="error" id="pdate-err" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="pwin">Pickup time</label>
+                <select id="pwin" name="win" aria-describedby="pwin-err"></select>
+                <span class="error" id="pwin-err" role="alert"></span>
+              </div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label class="l" for="pname">Name</label>
+                <input type="text" id="pname" name="name" autocomplete="name" aria-describedby="pname-err">
+                <span class="error" id="pname-err" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="pphone">Mobile number</label>
+                <input type="tel" id="pphone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="pphone-err">
+                <span class="error" id="pphone-err" role="alert"></span>
+              </div>
+            </div>
+            <button class="btn btn-ink" type="submit">Prepare my pre-order</button>
+            <div class="result" id="pres" tabindex="-1" aria-live="polite">
+              <h3>Pre-order <span id="pref"></span> is ready</h3>
+              <p>Send it to Hizon's. They confirm the total and have it ready at the counter.</p>
+              <pre id="pmsg"></pre>
+              <div class="actions">
+                <button class="btn btn-ink" type="button" data-copy="pmsg">Copy order</button>
+                <a class="btn btn-line" href="https://m.me/Hizons" target="_blank" rel="noopener">Open Messenger</a>
+                <a class="btn btn-line" href="viber://chat?number=%2B639175366241">Open Viber</a>
+                <a class="btn btn-line" id="psms" href="sms:+639175366241">Send by SMS</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="story" aria-labelledby="story-h">
+    <div class="wrap">
+      <div>
+        <h2 class="sec-h" id="story-h">Two sisters, one bakeshop, eighty years</h2>
+        <p class="sec-p">Hizon's calls itself the first and original bakeshop in Manila, and credits itself with the first ensaymada and mocha chiffon cake of their kind in the country.</p>
+        <div class="ph ph-stripe" data-photo="story" aria-hidden="true"></div>
+      </div>
+      <ol class="timeline">
+        <li><b>1946</b><p>Inocencia Hizon-Ramos, Lola Sesing to the family, opens a bakeshop with her sister Paz on Raon Street in Quiapo, near the old Globe Theatre.</p></li>
+        <li><b>1960s</b><p>Hizon's moves to a bigger place on J. Bocobo Street in Ermita, adds a restaurant beside the bakeshop, and stays there to this day.</p></li>
+        <li><b>2026</b><p>A second store opens at GH Mall in Greenhills on 29 June.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="visit" id="visit" aria-labelledby="visit-h">
+    <div class="wrap">
+      <h2 class="sec-h" id="visit-h">Stores and contact</h2>
+      <p class="sec-p">Pickup only. Hizon's does not deliver.</p>
+      <div class="grid">
+        <div>
+          <h3>Ermita</h3>
+          <p>1197 J. Bocobo St., corner Arquiza St.</p>
+          <p>Ermita, Manila</p>
+          <p class="m" style="margin-top:10px">Open daily, 8 AM to 9 PM</p>
+          <p style="margin-top:10px">Landline <a href="tel:+63285248790">(02) 8524 8790</a></p>
+          <p>Viber <a href="viber://chat?number=%2B639175366241">0917 536 6241</a></p>
+        </div>
+        <div>
+          <h3>GH Mall</h3>
+          <p>GH Mall, Ortigas Avenue</p>
+          <p>Greenhills, San Juan</p>
+          <p class="m" style="margin-top:10px">Open since 29 June 2026. Call ahead for store hours.</p>
+        </div>
+        <div class="links">
+          <h3>Online</h3>
+          <p><a href="https://www.facebook.com/Hizons" rel="noopener">Facebook</a></p>
+          <p><a href="https://m.me/Hizons" rel="noopener">Messenger</a></p>
+          <p><a href="https://www.instagram.com/hizons_cakes_and_pastries/" rel="noopener">Instagram</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Hizon's Cakes &amp; Pastries, Ermita, Manila, since 1946. Concept site by Kobe Ricafrente.</div>
+</footer>
+
+<script>
+/* Swap-in points. Put the real files next to this page, then fill these in. */
+const LOGO_SRC = "";   // e.g. "logo.png"
+const PHOTOS = {};     // e.g. { hero: "photos/storefront.jpg", ensaymada: "photos/ensaymada.jpg", story: "photos/1946.jpg" }
+
+/* Lead times and date window are settings for this preview, not published Hizon's policy. */
+const SHOP = {
+  leadCakeDays: 3,      // custom cakes: earliest pickup is today + 3 days
+  leadDayDays: 1,       // everyday items: earliest pickup is tomorrow
+  maxDays: 120,         // how far ahead the form accepts
+  closedDates: [],      // "YYYY-MM-DD" strings for days both stores are closed
+  viber: "+639175366241",
+};
+
+/* Hours for Ermita from the Yelp listing (2026). GH Mall hours not published, so no times are claimed. */
+const STORES = {
+  ermita: { name: "Hizon's Ermita", addr: "1197 J. Bocobo St., Ermita, Manila", hours: "Daily, 8 AM to 9 PM",
+    windows: [["Morning","8 AM to 12 NN"],["Afternoon","12 NN to 5 PM"],["Evening","5 PM to 9 PM"]] },
+  gh: { name: "Hizon's GH Mall", addr: "GH Mall, Ortigas Avenue, Greenhills, San Juan", hours: "Call ahead",
+    windows: [["Morning",""],["Afternoon",""],["Evening",""]] },
+};
+
+const OCCASIONS = ["Birthday","Wedding","Anniversary","Christening","Debut","Graduation","Office event","Something else"];
+
+/* Flavours named in public write-ups and Hizon's own posts (Rappler, Wanderlog, Tripadvisor). */
+const FLAVOURS = ["Mocha chiffon","Chocolate chiffon","Caramel chiffon","Orange chiffon","Chocolate","Sans rival"];
+
+/* Everyday items named in the same sources. No prices shown: none found with a date. */
+const ITEMS = [
+  { id: "cheddar-ens", name: "Cheddar Ensaymada", note: "Pillowy, with a crisp buttery crust." },
+  { id: "queso-ens", name: "Queso de Bola Ensaymada", note: "The ensaymada, topped with queso de bola." },
+  { id: "mocha", name: "Mocha Chiffon Cake", note: "The cake Hizon's is best known for." },
+  { id: "caramel", name: "Caramel Chiffon Cake", note: "Made to order." },
+  { id: "orange", name: "Orange Chiffon Cake", note: "Made to order." },
+  { id: "choc-chiffon", name: "Chocolate Chiffon Cake", note: "Made to order." },
+  { id: "choc", name: "Chocolate Cake", note: "A moist chocolate cake." },
+  { id: "sans-rival", name: "Sans Rival", note: "Layers of meringue and buttercream." },
+  { id: "rolls", name: "Dinner Rolls", note: "Baked fresh every day." },
+  { id: "raisin", name: "Raisin Bread", note: "Baked fresh every day." },
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* logo and photos */
+if (LOGO_SRC) { $("#brand").innerHTML = `<img src="${LOGO_SRC}" alt="Hizon's Cakes and Pastries">`; }
+$$("[data-photo]").forEach(el => {
+  const src = PHOTOS[el.dataset.photo];
+  if (src) { el.innerHTML = `<img src="${src}" alt="">`; }
+});
+
+/* dates */
+function iso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function today() { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+function earliest(days) { let d = addDays(today(), days); while (SHOP.closedDates.includes(iso(d))) d = addDays(d, 1); return d; }
+function latest() { return addDays(today(), SHOP.maxDays); }
+const longDate = d => d.toLocaleDateString("en-PH", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const shortDate = d => d.toLocaleDateString("en-PH", { weekday: "short", day: "numeric", month: "short" });
+function parseDate(v) { if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return null; const d = new Date(v + "T00:00"); return isNaN(d) ? null : d; }
+function dateError(v, leadDays, what) {
+  const d = parseDate(v);
+  if (!d) return "Choose a pickup date.";
+  const min = earliest(leadDays);
+  if (d < min) return `${what} need at least ${leadDays === 1 ? "one day" : leadDays + " days"}. Pick ${shortDate(min)} or later.`;
+  if (d > latest()) return `Pick a date before ${shortDate(latest())}.`;
+  if (SHOP.closedDates.includes(v)) return "Both stores are closed that day. Pick another date.";
+  return "";
+}
+
+/* store state, shared by the hero switcher and both forms */
+let store = "ermita";
+function fillWindows(sel, key) {
+  const keep = sel.value;
+  sel.innerHTML = `<option value="">Choose</option>` + STORES[key].windows.map(([w, h]) => `<option value="${w}">${w}${h ? " (" + h + ")" : ""}</option>`).join("");
+  if (keep) sel.value = keep;
+}
+function setStore(key, from) {
+  store = key;
+  const s = STORES[key];
+  $$(".seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.store === key)));
+  $("#store-h").textContent = s.name;
+  $("#store-addr").textContent = s.addr;
+  $("#store-hours").textContent = s.hours;
+  if (from !== "cake") { $$('input[name="store"]').forEach(r => r.checked = r.value === key); }
+  if (from !== "day") { $("#pstore").value = key; }
+  fillWindows($("#cwin"), key); fillWindows($("#pwin"), key);
+  $("#cwin-help").textContent = key === "gh" ? "Hizon's confirms the exact time for GH Mall." : "";
+  renderSlip();
+}
+$$(".seg button").forEach(b => b.addEventListener("click", () => setStore(b.dataset.store)));
+
+(function dates() {
+  const c = earliest(SHOP.leadCakeDays), p = earliest(SHOP.leadDayDays);
+  $("#store-cake").textContent = shortDate(c);
+  $("#store-day").textContent = shortDate(p);
+  $("#cdate").min = iso(c); $("#cdate").max = iso(latest());
+  $("#pdate").min = iso(p); $("#pdate").max = iso(latest());
+  $("#cdate-help").textContent = `${SHOP.leadCakeDays} days' notice. Earliest: ${shortDate(c)}.`;
+  $("#pdate-help").textContent = `Earliest: ${shortDate(p)}.`;
+})();
+
+/* custom cake builder */
+$("#occ").innerHTML = OCCASIONS.map(o => `<label><input type="radio" name="occasion" value="${o}"><span>${o}</span></label>`).join("");
+$("#flavour").innerHTML = `<option value="">Choose</option>` + FLAVOURS.map(f => `<option>${f}</option>`).join("") + `<option>Not sure yet, suggest one</option>`;
+
+const cf = $("#cf");
+let photoName = "";
+$("#photo").addEventListener("change", e => {
+  const f = e.target.files[0];
+  const t = $("#thumb");
+  setErr("photo", "");
+  if (!f) { photoName = ""; t.classList.remove("show"); renderSlip(); return; }
+  if (!f.type.startsWith("image/")) { setErr("photo", "Choose an image file, like a JPG or PNG."); e.target.value = ""; photoName = ""; t.classList.remove("show"); renderSlip(); return; }
+  photoName = f.name;
+  t.src = URL.createObjectURL(f); t.classList.add("show");
+  renderSlip();
+});
+
+function cakeData() {
+  const d = Object.fromEntries(new FormData(cf));
+  delete d.photo;
+  return d;
+}
+function renderSlip() {
+  const d = cakeData();
+  const date = parseDate(d.date || "");
+  const rows = [
+    ["Occasion", d.occasion],
+    ["Serves", d.serves ? d.serves + (d.tiers && d.tiers !== "Let Hizon's suggest" ? ", " + d.tiers : "") : ""],
+    ["Flavour", d.flavour],
+    ["Message", d.dedication ? `"${d.dedication}"` : ""],
+    ["Design", d.design],
+    ["Photo", photoName],
+    ["Pickup", STORES[d.store || store].name + (date ? ", " + shortDate(date) : "") + (d.win ? ", " + d.win.toLowerCase() : "")],
+    ["Name", d.name],
+  ];
+  $("#slip-list").innerHTML = rows.map(([k, v]) => `<div class="row"><dt>${k}</dt><dd class="${v ? "" : "empty"}">${v ? esc(v) : "Not yet"}</dd></div>`).join("");
+}
+cf.addEventListener("input", renderSlip);
+cf.addEventListener("change", e => {
+  if (e.target.name === "store") { setStore(e.target.value, "cake"); }
+  if (e.target.name === "occasion") { setErr("occ", ""); $("#occ").classList.remove("bad"); }
+  renderSlip();
+});
+
+function setErr(id, msg) {
+  $("#" + id + "-err").textContent = msg;
+  const input = document.getElementById(id);
+  if (input && id !== "occ") input.setAttribute("aria-invalid", msg ? "true" : "false");
+  return !msg;
+}
+const phoneOk = v => /^(\+?63|0)9\d{2}[\s-]?\d{3}[\s-]?\d{4}$/.test(v.trim());
+const ref = () => "HZ-" + Array.from({ length: 4 }, () => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.floor(Math.random() * 32)]).join("");
+
+cf.addEventListener("submit", e => {
+  e.preventDefault();
+  const d = cakeData();
+  let ok = true;
+  const occOk = !!d.occasion;
+  $("#occ-err").textContent = occOk ? "" : "Choose what the cake is for.";
+  $("#occ").classList.toggle("bad", !occOk);
+  $$('#occ input').forEach(i => i.setAttribute("aria-invalid", occOk ? "false" : "true"));
+  ok = occOk && ok;
+  ok = setErr("serves", d.serves ? "" : "Choose roughly how many people.") && ok;
+  ok = setErr("flavour", d.flavour ? "" : "Choose a flavour, or ask Hizon's to suggest one.") && ok;
+  ok = setErr("design", d.design.trim() || photoName ? "" : "Describe the design, or add a reference photo.") && ok;
+  ok = setErr("cdate", dateError(d.date, SHOP.leadCakeDays, "Custom cakes")) && ok;
+  ok = setErr("cwin", d.win ? "" : "Choose a pickup time.") && ok;
+  ok = setErr("cname", d.name.trim() ? "" : "Add your name.") && ok;
+  ok = setErr("cphone", phoneOk(d.phone) ? "" : "Use a PH mobile number, like 0917 123 4567.") && ok;
+  if (!ok) {
+    const first = cf.querySelector('[aria-invalid="true"]');
+    if (first) first.focus();
+    return;
+  }
+  const r = ref();
+  const s = STORES[d.store];
+  const win = s.windows.find(w => w[0] === d.win);
+  const msg = [
+    `Custom cake quote request ${r}`,
+    `Occasion: ${d.occasion}`,
+    `Serves: ${d.serves}`,
+    `Tiers: ${d.tiers}`,
+    `Flavour: ${d.flavour}`,
+    d.dedication.trim() ? `Message on cake: "${d.dedication.trim()}"` : null,
+    d.design.trim() ? `Design: ${d.design.trim()}` : null,
+    photoName ? `Reference photo: ${photoName} (sending it in this chat)` : null,
+    `Pickup: ${s.name}, ${longDate(parseDate(d.date))}, ${d.win.toLowerCase()}${win && win[1] ? " (" + win[1] + ")" : ""}`,
+    `Name: ${d.name.trim()}`,
+    `Mobile: ${d.phone.trim()}`,
+    "",
+    "Please send the price and how to confirm. Thank you!",
+  ].filter(x => x !== null).join("\n");
+  $("#cref").textContent = r;
+  $("#cmsg").textContent = msg;
+  $("#stamp").textContent = r;
+  $("#csms").href = `sms:${SHOP.viber}?&body=${encodeURIComponent(msg)}`;
+  const slip = $("#slip");
+  slip.classList.remove("sent"); void slip.offsetWidth; slip.classList.add("sent");
+  $("#cres").classList.add("show");
+  $("#cres").focus();
+});
+
+/* everyday pre-order */
+const qty = {};
+function renderItems() {
+  $("#items").innerHTML = ITEMS.map(it => {
+    const q = qty[it.id] || 0;
+    return `<li class="${q ? "on" : ""}"><div><h3>${it.name}</h3><p>${it.note}</p></div>
+      <div class="qty"><button type="button" data-dec="${it.id}" aria-label="One less ${it.name}">-</button><output aria-label="${it.name} quantity">${q}</output><button type="button" data-inc="${it.id}" aria-label="One more ${it.name}">+</button></div></li>`;
+  }).join("");
+}
+$("#items").addEventListener("click", e => {
+  const inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
+  const b = inc || dec; if (!b) return;
+  const id = b.dataset.inc || b.dataset.dec;
+  qty[id] = Math.max(0, Math.min(99, (qty[id] || 0) + (inc ? 1 : -1)));
+  const li = b.closest("li");
+  li.querySelector("output").textContent = qty[id];
+  li.classList.toggle("on", qty[id] > 0);
+  $("#items-err").textContent = "";
+});
+$("#pstore").addEventListener("change", e => setStore(e.target.value, "day"));
+
+const pf = $("#pf");
+pf.addEventListener("submit", e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(pf));
+  let ok = true;
+  const lines = ITEMS.filter(it => qty[it.id]).map(it => `${qty[it.id]} x ${it.name}`);
+  if (!lines.length) { $("#items-err").textContent = "Add at least one item above with the + button."; ok = false; }
+  ok = setErr("pdate", dateError(d.date, SHOP.leadDayDays, "Pre-orders")) && ok;
+  ok = setErr("pwin", d.win ? "" : "Choose a pickup time.") && ok;
+  ok = setErr("pname", d.name.trim() ? "" : "Add your name.") && ok;
+  ok = setErr("pphone", phoneOk(d.phone) ? "" : "Use a PH mobile number, like 0917 123 4567.") && ok;
+  if (!ok) {
+    const first = pf.querySelector('[aria-invalid="true"]');
+    if (first) first.focus(); else $("#items button").focus();
+    return;
+  }
+  const r = ref();
+  const s = STORES[d.store];
+  const win = s.windows.find(w => w[0] === d.win);
+  const msg = [
+    `Pre-order ${r}`,
+    ...lines,
+    "",
+    `Pickup: ${s.name}, ${longDate(parseDate(d.date))}, ${d.win.toLowerCase()}${win && win[1] ? " (" + win[1] + ")" : ""}`,
+    `Name: ${d.name.trim()}`,
+    `Mobile: ${d.phone.trim()}`,
+    "",
+    "Please confirm the total. Thank you!",
+  ].join("\n");
+  $("#pref").textContent = r;
+  $("#pmsg").textContent = msg;
+  $("#psms").href = `sms:${SHOP.viber}?&body=${encodeURIComponent(msg)}`;
+  $("#pres").classList.add("show");
+  $("#pres").focus();
+});
+
+/* copy buttons */
+$$("[data-copy]").forEach(b => b.addEventListener("click", async () => {
+  const text = document.getElementById(b.dataset.copy).textContent;
+  const label = b.textContent;
+  try { await navigator.clipboard.writeText(text); b.textContent = "Copied"; }
+  catch { b.textContent = "Select the text above to copy"; }
+  setTimeout(() => { b.textContent = label; }, 2200);
+}));
+
+renderItems();
+setStore("ermita");
+</script>
+</body>
+</html>
