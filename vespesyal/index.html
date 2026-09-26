@@ -653,7 +653,8 @@ form.addEventListener("submit",e=>{
   ok = setErr("name", v("name") ? "" : (who==="reseller" ? "Add the contact person's name." : "Add your name.")) && ok;
   ok = setErr("phone", /^(\+?63|0)9\d{2}[\s-]?\d{3}[\s-]?\d{4}$/.test(v("phone")) ? "" : "Use a PH mobile number, like 0917 123 4567.") && ok;
   if (!ok){
-    const first = form.querySelector('[aria-invalid="true"]') || (!ls.length ? form.querySelector("[data-q]:not([hidden])") : null);
+    const biz = $("#bizname").getAttribute("aria-invalid")==="true" && who==="reseller" ? $("#bizname") : null;
+    const first = biz || (!ls.length ? [...form.querySelectorAll("[data-q]")].find(el=>el.offsetParent) : null) || form.querySelector('[aria-invalid="true"]');
     if (first) first.focus();
     return;
   }
