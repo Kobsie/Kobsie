@@ -78,13 +78,16 @@ section{scroll-margin-top:84px}
 header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .nav .wrap{height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:"Unbounded",sans-serif;font-weight:700;font-size:20px;letter-spacing:-.03em;min-height:44px}
-.brand .mark{width:30px;height:30px;border-radius:50%;background:var(--pop);position:relative;flex:none}
-.brand .mark::after{content:"";position:absolute;left:7px;right:7px;top:13px;height:4px;border-radius:4px;background:var(--on-pop)}
+.brand{white-space:nowrap}
+.brand .mark{width:30px;height:28px;position:relative;flex:none}
+.brand .mark::before{content:"";position:absolute;left:7px;right:7px;top:0;height:11px;border-radius:5px 5px 2px 2px;background:var(--pop)}
+.brand .mark::after{content:"";position:absolute;left:0;right:0;bottom:0;height:15px;border-radius:6px 6px 2px 2px;background:var(--pop)}
 .brand img{height:40px;width:auto}
 .nav nav{display:flex;align-items:center;gap:24px}
 .nav nav a{text-decoration:none;font-weight:600;color:var(--muted)}
 .nav nav a:hover{color:var(--ink)}
 @media (max-width:820px){.nav nav a.hide-m{display:none}}
+@media (max-width:420px){.brand{font-size:17px}.nav nav .btn{padding:10px 16px;min-height:44px;font-size:15px}}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r-pill);padding:12px 24px;min-height:48px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap}
 .btn:active{transform:translateY(1px) scale(.99)}
@@ -677,6 +680,8 @@ $("#message").addEventListener("input", e => {
   render();
 });
 $("#guests").addEventListener("input", render);
+/* clear an error as soon as the field is edited */
+["guests","theme","addr","name","phone"].forEach(id => $("#" + id).addEventListener("input", () => { if ($("#" + id).getAttribute("aria-invalid") === "true") setErr(id, ""); }));
 
 /* ---------- dates ---------- */
 function iso(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }

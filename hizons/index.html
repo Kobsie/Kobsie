@@ -9,6 +9,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+/* Start both font downloads as soon as the stylesheet is parsed, before layout asks for them. */
+if (document.fonts && document.fonts.load) {
+  ['500 30px "EB Garamond"', '400 30px "EB Garamond"', '400 17px "Work Sans"', '500 16px "Work Sans"', '600 15px "Work Sans"'].forEach(function (f) { document.fonts.load(f).catch(function () {}); });
+}
+</script>
 <!--
   DESIGN PLAN
   1. Palette: navy #1c2847 (text, blocks), blush #f3d6d2 (the one accent), white #ffffff ground, pale grey #f2f3f6 panels. Dark: navy-black #0e1322 ground, #eef0f6 text, same blush.
@@ -135,7 +141,8 @@ header nav a.btn-ink,header nav a.btn-ink:hover{color:var(--on-block)}
 .switch p{margin:0;color:var(--muted);font-size:15px}
 .switch dl{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin:16px 0 0;padding-top:16px;border-top:1px solid var(--line)}
 .switch dt{font-size:13px;color:var(--muted)}
-.switch dd{margin:0;font-family:"EB Garamond",Georgia,serif;font-size:22px;line-height:1.2}
+.switch dd{margin:0;font-family:"EB Garamond",Georgia,serif;font-size:20px;line-height:1.2}
+.switch dt{white-space:nowrap}
 @media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:36px}.hero{padding:36px 0 48px}}
 @media (max-width:480px){.switch{margin:-32px 10px 0;padding:18px}.switch dl{grid-template-columns:1fr}}
 
@@ -603,11 +610,6 @@ const ITEMS = [
   { id: "rolls", name: "Dinner Rolls", note: "Baked fresh every day." },
   { id: "raisin", name: "Raisin Bread", note: "Baked fresh every day." },
 ];
-
-/* Ask for both faces up front so the page does not render in a fallback serif first. */
-if (document.fonts && document.fonts.load) {
-  ['500 30px "EB Garamond"', '400 30px "EB Garamond"', '400 17px "Work Sans"', '600 15px "Work Sans"'].forEach(f => document.fonts.load(f).catch(() => {}));
-}
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
