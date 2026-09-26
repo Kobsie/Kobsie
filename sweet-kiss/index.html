@@ -530,6 +530,9 @@ footer{padding:28px 0 44px;color:var(--muted);font-size:14px;border-top:1px soli
 </footer>
 
 <script>
+/* Ask for both faces straight away so the first paint does not wait on layout. */
+if (document.fonts) { ["700 1em Unbounded", "400 1em Manrope", "800 1em Manrope"].forEach(f => document.fonts.load(f).catch(() => {})); }
+
 /* Swap-in points. Put real files next to this page and fill these in. */
 const LOGO_SRC = "";                 // e.g. "logo.png"
 const PHOTOS = {                     // e.g. { "rainbow": "photos/rainbow.jpg", cakeOfDay: ["cotd/0926.jpg"] }
