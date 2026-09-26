@@ -528,7 +528,7 @@ function refresh(){
   ["trays","packs"].forEach(k=>{ const n = total(k); $(`[data-n="${k}"]`).textContent = n ? n : ""; });
   const p = total("packs");
   const meter = $("#meter");
-  meter.textContent = p >= SHOP.minPacks ? `${p} packs. Minimum of ${SHOP.minPacks} reached.` : `${p} of ${SHOP.minPacks} packs minimum.`;
+  meter.textContent = p >= SHOP.minPacks ? `${p} packs. Sample minimum of ${SHOP.minPacks} reached.` : `${p} of ${SHOP.minPacks} packs minimum (sample rule for this preview).`;
   meter.classList.toggle("ok", p >= SHOP.minPacks);
   $("#guests-field").hidden = total("trays") === 0 && p > 0;
   if (total("trays")+p) $("#cart-err").textContent = "";

@@ -67,6 +67,7 @@ a{color:inherit}
 @media (max-width:600px){.wrap{padding:0 16px}}
 .serif{font-family:"DM Serif Display",Georgia,serif;font-weight:400}
 h1,h2,h3{font-family:"DM Serif Display",Georgia,serif;font-weight:400;margin:0}
+[hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* concept strip */
@@ -113,6 +114,8 @@ header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--g
 .ctas{display:flex;gap:12px;flex-wrap:wrap}
 @media (max-width:760px){
   .hero{padding-top:16px}
+  .hero .slot{height:200px}
+  .hero h1{font-size:34px}
   .hero-copy{margin:-64px 12px 0;padding:24px 22px 26px}
   .hero .lede{font-size:17px}
 }
@@ -432,7 +435,7 @@ footer{padding:24px 0 48px;color:var(--muted);font-size:14px}
           <div id="hold-empty">
             <ul class="track" aria-label="Order status"><li>Held</li><li>Paid</li><li>Reserved</li></ul>
             <h3 id="hold-h">No slot held yet</h3>
-            <p>Send your order and your date is held for 24 hours while you pay. Unpaid orders are not reserved.</p>
+            <p>Send your order and your date is held for 24 hours while you pay. The countdown and the steps to pay show here. Unpaid orders are not reserved.</p>
           </div>
 
           <div id="hold-live" hidden>

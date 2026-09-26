@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sweet Kiss Custom Cakes</title>
+<meta name="description" content="Build your custom cake, pick a date, and send Sweet Kiss a quote request. Custom cakes from Scout Chuatoco, Quezon City.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Unbounded:wght@700&display=swap" rel="stylesheet">
+<!--
+  DESIGN PLAN
+  1. Palette: off-white #fafafa, ink #18181b, one pop of hot pink #e02d7a (white text on pink, 5.4:1). Dark: ink ground, same pink.
+  2. Type: Unbounded 700 for display and the wordmark, Manrope 400/600/800 for body and form.
+  3. Layout: split hero where the right half is a live CSS cake driven by real form state; product bento; pink "how it works" band; builder with sticky summary; Cake of the Day scroll strip; contact columns.
+  4. Radius rule: every control is a pill (999px), panels are 20px, cake tiers are 10px. Nothing else.
+  5. The one memorable thing: the cake in the hero restacks as you pick tiers, colour, style and message. Tiers drop in once on load, that is the only motion moment.
+  6. Copy: plain sentence case, no invented prices, no invented cakes, Sweet Kiss confirms every total.
+
+  SOURCES (checked 26 Sep 2026)
+  - Kobe's prospect research, 21 Sep 2026: 20 years, 83K followers, 92% of 913 reviews recommend, daily Cake of the Day, orders by DM and "Book now".
+  - Address 46 Scout Chuatoco, Quezon City 1100 (bakerias.com listing, 2025). Mobile 0939 926 1699 and Instagram @sweetkissph (their Instagram profile, via search).
+  - Products: rainbow cakes, macaron cakes, cupcakes, custom cakes, macarons in boxes of 12, cupcakes in sets of 12 (looloo.com and StarDeals/MetroDeal listings).
+  - Minimalist cakes in solid colour and palette painting, moist chocolate or red velvet, frosting in blue, pink, green, yellow or grey (Sweet Kiss collection on cakerush.ph).
+  - Themes seen on their Facebook posts: Paw Patrol, Minecraft. Delivery within Quezon City and nearby areas (their Facebook bio).
+  - Not shown on purpose: prices (only old promo and reseller prices were found), opening hours, deposit percentage, lead time and daily cap (not published).
+    LEAD_DAYS and SLOTS_PER_DAY below are concept settings for Sweet Kiss to replace.
+
+  SWAP IN REAL ASSETS
+  - Logo: put the file next to this page and set LOGO_SRC.
+  - Photos: fill PHOTOS (product ids below, plus cakeOfDay as a list, newest first). Empty slots render as coloured panels.
+-->
+<style>
+:root{
+  --paper:#fafafa;
+  --ink:#18181b;
+  --muted:#52525b;
+  --line:#dedee3;
+  --panel:#f0f0f2;
+  --pop:#e02d7a;          /* the one accent */
+  --on-pop:#fafafa;       /* text on pink: 5.4:1 */
+  --pop-text:#c01f67;     /* pink used as text on paper */
+  --stage:#18181b;        /* hero cake stage */
+  --on-stage:#fafafa;
+  --field:#ffffff;
+  --field-line:#767680;
+  --focus:#1d4ed8;
+  --err:#b42318;
+  --r-panel:20px;
+  --r-pill:999px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#18181b; --ink:#fafafa; --muted:#a1a1aa; --line:#34343a; --panel:#222226;
+    --pop-text:#ff6aa8; --stage:#26262b; --field:#1f1f23; --field-line:#8a8a94;
+    --focus:#8ab4ff; --err:#ff8a80;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Manrope",system-ui,sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.display{font-family:"Unbounded",system-ui,sans-serif;font-weight:700;letter-spacing:-.02em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+section{scroll-margin-top:84px}
+
+/* concept strip */
+.concept{background:var(--pop);color:var(--on-pop);font-size:14px;padding:8px 0}
+.concept .wrap{display:flex;gap:12px;justify-content:space-between;align-items:center}
+.concept p{margin:0}
+.concept button{background:none;border:1.5px solid currentColor;color:inherit;border-radius:var(--r-pill);padding:6px 16px;min-height:36px;font:inherit;font-weight:600;cursor:pointer}
+
+/* nav */
+header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:"Unbounded",sans-serif;font-weight:700;font-size:20px;letter-spacing:-.03em;min-height:44px}
+.brand .mark{width:30px;height:30px;border-radius:50%;background:var(--pop);position:relative;flex:none}
+.brand .mark::after{content:"";position:absolute;left:7px;right:7px;top:13px;height:4px;border-radius:4px;background:var(--on-pop)}
+.brand img{height:40px;width:auto}
+.nav nav{display:flex;align-items:center;gap:24px}
+.nav nav a{text-decoration:none;font-weight:600;color:var(--muted)}
+.nav nav a:hover{color:var(--ink)}
+@media (max-width:820px){.nav nav a.hide-m{display:none}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r-pill);padding:12px 24px;min-height:48px;font:inherit;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-pop{background:var(--pop);color:var(--on-pop)}
+.nav nav a.btn-pop{color:var(--on-pop)}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+
+/* hero */
+.hero{padding:40px 0 56px}
+.hero .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(30px,3.1vw,46px);line-height:1.12;margin:0 0 22px;max-width:20ch}
+.hero .lede{font-size:19px;color:var(--muted);max-width:38ch;margin:0 0 30px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:32px}.hero{padding:28px 0 44px}}
+
+/* the cake stage */
+.stage{background:var(--stage);color:var(--on-stage);border-radius:var(--r-panel);padding:22px;display:grid;grid-template-rows:1fr auto;min-height:520px;position:relative;overflow:hidden}
+.stage .pic{position:relative;min-height:390px}
+.stage .cake{--u:1.2px}
+.stage .readout{position:absolute;top:0;left:0;font-size:14px;color:#d4d4d8;max-width:60%}
+.stage .readout b{display:block;color:var(--on-stage);font-family:"Unbounded",sans-serif;font-size:16px;line-height:1.3}
+.stage .controls{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;padding-top:18px;border-top:1px solid #3f3f46}
+.stage .grp{display:flex;align-items:center;gap:10px}
+.stage .grp > span{font-size:14px;color:#d4d4d8;font-weight:600}
+@media (max-width:520px){.stage{min-height:0;padding:18px}.stage .pic{min-height:320px}.stage .cake{--u:.95px}}
+
+.cake{--u:1px;position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column-reverse;align-items:center}
+.plate{width:86%;height:calc(var(--u)*12);border-radius:var(--r-pill);background:#e4e4e7;flex:none}
+.tier{position:relative;border-radius:10px 10px 4px 4px;background:var(--c);box-shadow:inset 0 calc(var(--u)*9) 0 rgba(255,255,255,.38),inset 0 calc(var(--u)*-6) 0 rgba(24,24,27,.12);transition:width .35s ease,height .35s ease,background-color .3s ease;flex:none}
+.tier + .tier{margin-bottom:0}
+.cake[data-style="palette"] .tier{background-image:repeating-linear-gradient(104deg,rgba(255,255,255,.55) 0 5px,transparent 5px 19px,rgba(24,24,27,.14) 19px 22px,transparent 22px 36px)}
+.cake[data-style="rainbow"] .tier{background-image:linear-gradient(to bottom,var(--c) 0 22%,#f28ab8 22% 35%,#f5d256 35% 48%,#86cf9a 48% 61%,#6fa8e6 61% 74%,#b9b9c1 74% 87%,var(--c) 87%)}
+.cake[data-style="macaron"] .tier::before{content:"";position:absolute;left:6%;right:6%;top:calc(var(--u)*-9);height:calc(var(--u)*16);background:radial-gradient(circle at calc(var(--u)*9) 50%,#fafafa calc(var(--u)*7),rgba(24,24,27,.25) calc(var(--u)*7.5),transparent calc(var(--u)*8.5)) repeat-x;background-size:calc(var(--u)*22) 100%}
+.topper{position:absolute;left:50%;bottom:100%;width:calc(var(--u)*4);height:calc(var(--u)*44);background:#e4e4e7;transform:translateX(-50%);display:none}
+.topper::after{content:"";position:absolute;left:50%;top:calc(var(--u)*-18);width:calc(var(--u)*34);height:calc(var(--u)*24);background:var(--pop);border-radius:var(--r-pill);transform:translateX(-10%)}
+.cake[data-style="theme"] .top .topper{display:block}
+.plaque{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);background:#fafafa;color:#18181b;font-weight:800;font-size:calc(var(--u)*14);line-height:1.2;padding:calc(var(--u)*5) calc(var(--u)*12);border-radius:var(--r-pill);white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis}
+.plaque:empty{display:none}
+@media (prefers-reduced-motion: no-preference){
+  .cake.drop .tier{animation:drop .6s cubic-bezier(.2,.9,.3,1.2) backwards}
+  .cake.drop .tier:nth-of-type(3){animation-delay:.15s}
+  .cake.drop .tier:nth-of-type(4){animation-delay:.3s}
+  @keyframes drop{from{transform:translateY(-90px);opacity:0}}
+}
+
+/* pill radios (tiers, style, flavour, mode) */
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills label{position:relative}
+.pills input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.pills span{display:inline-flex;align-items:center;min-height:44px;padding:8px 18px;border-radius:var(--r-pill);box-shadow:inset 0 0 0 1.5px var(--field-line);font-weight:600;cursor:pointer}
+.pills input:checked + span{background:var(--ink);color:var(--paper);box-shadow:none}
+.pills input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.stage .pills span{box-shadow:inset 0 0 0 1.5px #71717a;color:var(--on-stage);min-width:44px;justify-content:center;padding:8px 14px}
+.stage .pills input:checked + span{background:var(--pop);color:var(--on-pop)}
+
+/* swatches */
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches label{position:relative}
+.swatches input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.swatches span{display:block;width:44px;height:44px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 2px rgba(24,24,27,.18);cursor:pointer}
+.swatches input:checked + span{outline:3px solid currentColor;outline-offset:3px}
+.swatches input:focus-visible + span{outline:3px solid var(--focus);outline-offset:3px}
+
+/* proof statement */
+.proof{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:44px 0}
+.proof p{margin:0;font-family:"Unbounded",sans-serif;font-weight:700;font-size:clamp(22px,2.6vw,34px);line-height:1.3;letter-spacing:-.02em;max-width:34ch}
+.proof small{display:block;margin-top:14px;font-family:"Manrope",sans-serif;font-size:15px;color:var(--muted);letter-spacing:0;font-weight:400}
+
+/* what they bake */
+.bake{padding:80px 0}
+.bake h2,.builder h2,.cotd h2,.visit h2{font-size:clamp(28px,3.2vw,42px);line-height:1.12;margin:0 0 12px}
+.bake .intro,.cotd .intro,.builder .intro{color:var(--muted);max-width:56ch;margin:0 0 32px}
+.grid-bake{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.item .ph{border-radius:var(--r-panel);background-color:var(--c);position:relative;overflow:hidden;aspect-ratio:4/3}
+.item .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.item h3{font-size:18px;margin:14px 0 4px;line-height:1.25}
+.item p{margin:0;color:var(--muted);font-size:15px}
+.item.big{grid-column:span 2;grid-row:span 2}
+.item.big .ph{aspect-ratio:auto;height:calc(100% - 92px);min-height:260px}
+.item.wide{grid-column:span 2}
+.item.wide .ph{aspect-ratio:auto;height:180px}
+.tex-custom{background-image:radial-gradient(circle at 30% 70%,rgba(255,255,255,.28) 0 60px,transparent 61px),radial-gradient(circle at 78% 30%,rgba(24,24,27,.14) 0 90px,transparent 91px)}
+.tex-palette{background-image:repeating-linear-gradient(104deg,rgba(255,255,255,.5) 0 8px,transparent 8px 30px,rgba(24,24,27,.12) 30px 34px,transparent 34px 52px)}
+.tex-rainbow{background-image:linear-gradient(to bottom,#f28ab8 0 20%,#f5d256 20% 40%,#86cf9a 40% 60%,#6fa8e6 60% 80%,#b9b9c1 80%)}
+.tex-macaron{background-image:radial-gradient(circle,rgba(255,255,255,.75) 0 18px,transparent 19px);background-size:56px 56px}
+.tex-cupcake{background-image:radial-gradient(circle at 50% 30%,rgba(255,255,255,.6) 0 22px,transparent 23px),linear-gradient(to bottom,transparent 58%,rgba(24,24,27,.14) 58%);background-size:80px 100%}
+.tex-macarons{background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,.55) 0 14px,transparent 14px 20px,rgba(24,24,27,.12) 20px 24px,transparent 24px 44px)}
+@media (max-width:900px){.grid-bake{grid-template-columns:1fr 1fr}.item.big{grid-row:auto}.item.big .ph{height:auto;min-height:0;aspect-ratio:16/10}}
+@media (max-width:520px){.grid-bake{grid-template-columns:1fr}.item.big,.item.wide{grid-column:auto}.item.wide .ph{height:auto;aspect-ratio:16/9}}
+
+/* how it works, pink band */
+.how{background:var(--pop);color:var(--on-pop);padding:64px 0}
+.how h2{font-size:clamp(26px,3vw,38px);margin:0 0 32px;line-height:1.15}
+.how ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:36px;counter-reset:s}
+.how li{counter-increment:s}
+.how li::before{content:counter(s);display:block;font-family:"Unbounded",sans-serif;font-weight:700;font-size:56px;line-height:1;margin-bottom:12px}
+.how h3{font-size:19px;margin:0 0 6px}
+.how p{margin:0;max-width:34ch}
+@media (max-width:820px){.how ol{grid-template-columns:1fr;gap:28px}.how li{display:grid;grid-template-columns:56px 1fr;column-gap:14px}.how li::before{font-size:44px;grid-row:span 2}}
+
+/* builder */
+.builder{padding:80px 0}
+.builder .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:48px;align-items:start}
+.builder aside{position:sticky;top:92px;border-radius:var(--r-panel);background:var(--panel);padding:20px}
+.builder aside .mini{position:relative;height:210px;background:var(--stage);border-radius:var(--r-panel);margin-bottom:16px;overflow:hidden}
+.builder aside .mini .cake{--u:.62px;bottom:16px}
+.builder aside h3{font-size:17px;margin:0 0 10px}
+.builder aside dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px}
+.builder aside dt{color:var(--muted)}
+.builder aside dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+@media (max-width:980px){.builder .layout{grid-template-columns:1fr}.builder aside{position:static;order:-1}}
+
+form fieldset{border:0;margin:0 0 36px;padding:0}
+form legend{font-family:"Unbounded",sans-serif;font-weight:700;font-size:20px;letter-spacing:-.02em;margin-bottom:16px;padding:0}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.l{font-weight:800;font-size:15px}
+form input[type=text],form input[type=tel],form input[type=url],form input[type=number],form textarea{font:inherit;color:var(--ink);background:var(--field);border:1.5px solid var(--field-line);border-radius:12px;padding:11px 14px;width:100%;min-height:48px}
+form input:focus,form textarea:focus{outline:3px solid var(--focus);outline-offset:1px;border-color:var(--ink)}
+form input[aria-invalid=true],form textarea[aria-invalid=true]{border-color:var(--err)}
+.help{font-size:14px;color:var(--muted)}
+.error{font-size:14px;color:var(--err);font-weight:600}
+.error:empty{display:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+.checks{display:flex;flex-direction:column;gap:6px}
+.checks label{display:flex;gap:12px;align-items:center;min-height:44px;cursor:pointer}
+.checks input{width:22px;height:22px;accent-color:var(--pop);margin:0}
+
+/* calendar */
+.rule{border-radius:var(--r-panel);background:var(--panel);padding:16px 18px;margin-bottom:16px;font-size:15px}
+.rule b{font-weight:800}
+.rule p{margin:0}
+.rule p + p{margin-top:6px;color:var(--muted);font-size:14px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;max-width:520px}
+.cal .dow{font-size:13px;color:var(--muted);text-align:center;font-weight:600}
+.cal label{position:relative}
+.cal input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.cal label span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--field-line);font-weight:800;cursor:pointer;line-height:1.1}
+.cal label span small{font-size:11px;font-weight:600;color:var(--muted)}
+.cal input:disabled + span{box-shadow:none;background:transparent;color:var(--muted);opacity:.55;text-decoration:line-through;cursor:not-allowed}
+.cal input:checked + span{background:var(--pop);color:var(--on-pop);box-shadow:none}
+.cal input:checked + span small{color:var(--on-pop)}
+.cal input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.cal[aria-invalid=true] label span{box-shadow:inset 0 0 0 1.5px var(--err)}
+.cal[aria-invalid=true] input:disabled + span{box-shadow:none}
+.counter{font-size:14px;color:var(--muted);text-align:right}
+
+.submit-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.submit-row p{margin:0;color:var(--muted);font-size:15px;max-width:40ch}
+
+.done{display:none;border-radius:var(--r-panel);background:var(--ink);color:var(--paper);padding:24px;margin-top:28px}
+.done.show{display:block}
+.done h3{margin:0 0 8px;font-size:22px;line-height:1.25}
+.done p{margin:0 0 6px}
+.done pre{white-space:pre-wrap;font:inherit;font-size:15px;background:color-mix(in srgb,var(--paper) 10%,transparent);border-radius:12px;padding:14px;margin:14px 0}
+.done .ctas{display:flex;gap:10px;flex-wrap:wrap}
+.done .btn-line{color:var(--paper);box-shadow:inset 0 0 0 2px var(--paper)}
+.done .btn-ink{background:var(--paper);color:var(--ink)}
+.done:focus{outline:3px solid var(--focus);outline-offset:3px}
+
+/* cake of the day */
+.cotd{padding:80px 0;border-top:1px solid var(--line)}
+.strip{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 20px 12px;margin:0 -20px;list-style:none}
+.strip li{flex:0 0 220px;scroll-snap-align:start}
+.strip .ph{position:relative;aspect-ratio:4/5;border-radius:var(--r-panel);background-color:var(--c);overflow:hidden}
+.strip .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.strip .date{font-family:"Unbounded",sans-serif;font-weight:700;font-size:18px;margin:12px 0 0}
+.strip .cap{margin:0;color:var(--muted);font-size:14px}
+.cotd .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+
+/* visit */
+.visit{padding:80px 0;border-top:1px solid var(--line)}
+.visit .grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:40px;margin-top:28px}
+.visit h3{font-family:"Manrope",sans-serif;font-size:15px;margin:0 0 8px;color:var(--muted);font-weight:600;letter-spacing:0}
+.visit p{margin:0 0 6px}
+.visit a{font-weight:800;text-decoration-thickness:1.5px;text-underline-offset:4px;display:inline-block;padding:6px 0}
+.visit .big-num{font-family:"Unbounded",sans-serif;font-size:clamp(24px,2.6vw,32px);font-weight:700;text-decoration:none;color:var(--pop-text)}
+@media (max-width:820px){.visit .grid{grid-template-columns:1fr;gap:28px}}
+footer{padding:28px 0 44px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="concept" id="concept" role="note">
+  <div class="wrap">
+    <p>Concept preview made by Kobe Ricafrente for Sweet Kiss Custom Cakes. Not the official Sweet Kiss Custom Cakes website.</p>
+    <button type="button" onclick="document.getElementById('concept').remove()">Hide</button>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" id="brand" aria-label="Sweet Kiss Custom Cakes, home"><span class="mark" aria-hidden="true"></span><span>sweet kiss</span></a>
+    <nav aria-label="Main">
+      <a class="hide-m" href="#bake">Cakes</a>
+      <a class="hide-m" href="#cotd">Cake of the Day</a>
+      <a class="hide-m" href="#visit">Contact</a>
+      <a class="btn btn-pop" href="#builder">Build your cake</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="wrap">
+      <div>
+        <h1 id="hero-h">Build your cake, then book the date.</h1>
+        <p class="lede">Custom cakes from Scout Chuatoco, Quezon City. Pick the size, flavour and colour, and Sweet Kiss replies with a quote.</p>
+        <div class="ctas">
+          <a class="btn btn-pop" href="#builder">Build your cake</a>
+          <a class="btn btn-line" href="#cotd">Cake of the Day</a>
+        </div>
+      </div>
+
+      <div class="stage" role="group" aria-label="Live preview of your cake">
+        <div class="pic">
+          <p class="readout" aria-live="polite" id="readout"></p>
+          <div class="cake drop" id="cake-hero" aria-hidden="true"></div>
+        </div>
+        <div class="controls">
+          <div class="grp">
+            <span id="ht-l">Tiers</span>
+            <div class="pills" role="radiogroup" aria-labelledby="ht-l" data-sync="tiers" id="hero-tiers"></div>
+          </div>
+          <div class="grp">
+            <span id="hc-l">Frosting</span>
+            <div class="swatches" role="radiogroup" aria-labelledby="hc-l" data-sync="colour" id="hero-colours"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="proof">
+    <div class="wrap">
+      <p>Twenty years of custom cakes in Quezon City. 83K people follow Sweet Kiss, and 92% of 913 reviewers recommend it.</p>
+      <small>From the Sweet Kiss Facebook page, September 2026.</small>
+    </div>
+  </div>
+
+  <section class="bake" id="bake" aria-labelledby="bake-h">
+    <div class="wrap">
+      <h2 id="bake-h">What Sweet Kiss bakes</h2>
+      <p class="intro">Every cake is made to order. Choose any of these in the builder, or describe something new.</p>
+      <div class="grid-bake" id="products"></div>
+    </div>
+  </section>
+
+  <section class="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <h2 id="how-h">From request to cake</h2>
+      <ol>
+        <li><h3>Send your request</h3><p>Build the cake below and send it by Messenger or text. It carries a reference number.</p></li>
+        <li><h3>Get your quote</h3><p>Sweet Kiss checks the design and replies with the total and the deposit.</p></li>
+        <li><h3>The deposit holds your date</h3><p>Once the deposit is in, the date is yours. Each day takes a set number of cakes, so full days close.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="builder" id="builder" aria-labelledby="builder-h">
+    <div class="wrap">
+      <h2 id="builder-h">Build your cake</h2>
+      <p class="intro">Nothing is charged here. This sends a quote request, and Sweet Kiss confirms the price with you.</p>
+
+      <div class="layout">
+        <form id="f" novalidate>
+          <fieldset>
+            <legend>The cake</legend>
+            <div class="field">
+              <span class="l" id="style-l">Style</span>
+              <div class="pills" role="radiogroup" aria-labelledby="style-l" id="styles"></div>
+            </div>
+            <div class="field">
+              <span class="l" id="tiers-l">Tiers</span>
+              <div class="pills" role="radiogroup" aria-labelledby="tiers-l" data-sync="tiers" id="form-tiers"></div>
+            </div>
+            <div class="field">
+              <label class="l" for="guests">How many people will it feed?</label>
+              <input type="number" id="guests" name="guests" inputmode="numeric" min="1" max="500" aria-describedby="guests-help guests-err">
+              <span class="help" id="guests-help">Sweet Kiss suggests the right size for your headcount.</span>
+              <span class="error" id="guests-err"></span>
+            </div>
+            <div class="field">
+              <span class="l" id="flav-l">Flavour</span>
+              <div class="pills" role="radiogroup" aria-labelledby="flav-l" id="flavours"></div>
+            </div>
+            <div class="field">
+              <span class="l" id="col-l">Frosting colour</span>
+              <div class="swatches" role="radiogroup" aria-labelledby="col-l" data-sync="colour" id="form-colours"></div>
+              <span class="help" id="col-name"></span>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>The design</legend>
+            <div class="field">
+              <label class="l" for="theme">Theme and design notes</label>
+              <textarea id="theme" name="theme" rows="3" aria-describedby="theme-help theme-err"></textarea>
+              <span class="help" id="theme-help">For example Paw Patrol, Minecraft, a name and age, or colours to match a party.</span>
+              <span class="error" id="theme-err"></span>
+            </div>
+            <div class="field">
+              <label class="l" for="inspo">Inspiration link (optional)</label>
+              <input type="url" id="inspo" name="inspo" inputmode="url" aria-describedby="inspo-help">
+              <span class="help" id="inspo-help">Paste a Cake of the Day post or any photo link.</span>
+            </div>
+            <div class="field">
+              <label class="l" for="message">Message on the cake (optional)</label>
+              <input type="text" id="message" name="message" maxlength="40" aria-describedby="message-help">
+              <span class="help" id="message-help">Up to 40 characters. It shows on the preview. <span id="msg-count">0 of 40</span></span>
+            </div>
+            <div class="field">
+              <span class="l" id="extras-l">Add to the order (optional)</span>
+              <div class="checks" role="group" aria-labelledby="extras-l">
+                <label><input type="checkbox" name="extras" value="A set of 12 cupcakes"> A set of 12 cupcakes</label>
+                <label><input type="checkbox" name="extras" value="A box of 12 macarons"> A box of 12 macarons</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Date and handover</legend>
+            <div class="rule" id="rule">
+              <p><b>Book at least <span data-lead></span> days ahead. Up to <span data-slots></span> custom cakes a day.</b> Earliest date today: <b id="earliest"></b>.</p>
+              <p>These two numbers are concept settings. Sweet Kiss sets the real lead time and daily cap, and full days close for everyone.</p>
+            </div>
+            <div class="field">
+              <span class="l" id="date-l">Date you need the cake</span>
+              <div class="cal" role="radiogroup" aria-labelledby="date-l" aria-describedby="date-err" id="cal"></div>
+              <span class="help">Need a later date? Pick the last one shown and say so in the design notes.</span>
+              <span class="error" id="date-err"></span>
+            </div>
+            <div class="field">
+              <span class="l" id="mode-l">Pickup or delivery</span>
+              <div class="pills" role="radiogroup" aria-labelledby="mode-l">
+                <label><input type="radio" name="mode" value="Pickup" checked><span>Pickup on Scout Chuatoco</span></label>
+                <label><input type="radio" name="mode" value="Delivery"><span>Delivery</span></label>
+              </div>
+            </div>
+            <div class="field" id="addr-field" hidden>
+              <label class="l" for="addr">Delivery address</label>
+              <textarea id="addr" name="addr" rows="2" aria-describedby="addr-help addr-err"></textarea>
+              <span class="help" id="addr-help">Sweet Kiss delivers within Quezon City and nearby areas.</span>
+              <span class="error" id="addr-err"></span>
+            </div>
+            <div class="field">
+              <label class="l" for="time">Time you need it (optional)</label>
+              <input type="text" id="time" name="time" aria-describedby="time-help">
+              <span class="help" id="time-help">For example "before 3 PM" or "party starts at 6".</span>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>You</legend>
+            <div class="two">
+              <div class="field">
+                <label class="l" for="name">Your name</label>
+                <input type="text" id="name" name="name" autocomplete="name" aria-describedby="name-err">
+                <span class="error" id="name-err"></span>
+              </div>
+              <div class="field">
+                <label class="l" for="phone">Mobile number</label>
+                <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" aria-describedby="phone-help phone-err">
+                <span class="help" id="phone-help">For the quote and pickup updates.</span>
+                <span class="error" id="phone-err"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="submit-row">
+            <button class="btn btn-pop" type="submit">Request a quote</button>
+            <p>Sweet Kiss replies with the total and the deposit that holds your date.</p>
+          </div>
+
+          <div class="done" id="done" tabindex="-1" aria-live="polite">
+            <h3>Request <span id="ref"></span> is ready to send</h3>
+            <p>Send it to Sweet Kiss by Messenger or text. Copy it first so you can paste it into the chat.</p>
+            <pre id="out"></pre>
+            <div class="ctas">
+              <button class="btn btn-ink" type="button" id="copy">Copy request</button>
+              <a class="btn btn-line" href="https://m.me/SweetKissPh" rel="noopener">Open Messenger</a>
+              <a class="btn btn-line" id="sms" href="sms:+639399261699">Text it</a>
+              <a class="btn btn-line" href="tel:+639399261699">Call</a>
+            </div>
+          </div>
+        </form>
+
+        <aside aria-labelledby="sum-h">
+          <div class="mini"><div class="cake" id="cake-mini" aria-hidden="true"></div></div>
+          <h3 id="sum-h">Your cake so far</h3>
+          <dl id="summary"></dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="cotd" id="cotd" aria-labelledby="cotd-h">
+    <div class="wrap">
+      <h2 id="cotd-h">Cake of the Day</h2>
+      <p class="intro">Sweet Kiss posts one cake every day on Facebook. See one you want? Paste its link into your request and ask for that design.</p>
+      <ul class="strip" id="strip"></ul>
+      <div class="ctas">
+        <a class="btn btn-ink" href="https://www.facebook.com/SweetKissPh" rel="noopener">See today's on Facebook</a>
+        <a class="btn btn-line" href="#inspo" id="use-post">Use a post as my design</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit" id="visit" aria-labelledby="visit-h">
+    <div class="wrap">
+      <h2 id="visit-h">Contact</h2>
+      <div class="grid">
+        <div>
+          <h3>Shop</h3>
+          <p>46 Scout Chuatoco</p>
+          <p>Quezon City 1100</p>
+          <p><a href="https://www.google.com/maps/search/?api=1&amp;query=Sweet+Kiss+Custom+Cakes+46+Scout+Chuatoco+Quezon+City" rel="noopener">Open in Google Maps</a></p>
+          <p class="help">Delivery within Quezon City and nearby areas.</p>
+        </div>
+        <div>
+          <h3>Call or text</h3>
+          <p><a class="big-num" href="tel:+639399261699">0939 926 1699</a></p>
+        </div>
+        <div>
+          <h3>Online</h3>
+          <p><a href="https://www.facebook.com/SweetKissPh" rel="noopener">Facebook, SweetKissPh</a></p>
+          <p><a href="https://m.me/SweetKissPh" rel="noopener">Messenger</a></p>
+          <p><a href="https://www.instagram.com/sweetkissph/" rel="noopener">Instagram, @sweetkissph</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Sweet Kiss Custom Cakes, Scout Chuatoco, Quezon City. Concept site by Kobe Ricafrente.</div>
+</footer>
+
+<script>
+/* Swap-in points. Put real files next to this page and fill these in. */
+const LOGO_SRC = "";                 // e.g. "logo.png"
+const PHOTOS = {                     // e.g. { "rainbow": "photos/rainbow.jpg", cakeOfDay: ["cotd/0926.jpg"] }
+  cakeOfDay: []                      // newest first, one per day
+};
+
+/* LEAD_DAYS and SLOTS_PER_DAY are concept settings, not published by Sweet Kiss. */
+const SHOP = {
+  name: "Sweet Kiss Custom Cakes",
+  leadDays: 3,
+  slotsPerDay: 10,
+  phone: "+639399261699",
+};
+
+/* Frosting colours offered on the Sweet Kiss minimalist cakes (cakerush.ph listing, 2026). */
+const COLOURS = [
+  {id:"pink",   name:"Pink",   hex:"#f28ab8"},
+  {id:"blue",   name:"Blue",   hex:"#6fa8e6"},
+  {id:"green",  name:"Green",  hex:"#86cf9a"},
+  {id:"yellow", name:"Yellow", hex:"#f5d256"},
+  {id:"grey",   name:"Grey",   hex:"#b9b9c1"},
+];
+const STYLES = [
+  {id:"theme",   name:"Custom theme"},
+  {id:"solid",   name:"Minimalist, solid colour"},
+  {id:"palette", name:"Minimalist, palette painting"},
+  {id:"rainbow", name:"Rainbow cake"},
+  {id:"macaron", name:"Macaron cake"},
+];
+const FLAVOURS = ["Moist chocolate", "Red velvet", "Ask about other flavours"];
+const TIERS = [1,2,3];
+
+/* Products named on looloo.com, deal listings and cakerush.ph. */
+const PRODUCTS = [
+  {id:"custom",   name:"Custom cakes", note:"Birthdays, weddings and milestones, made to your theme.", c:"#e02d7a", tex:"tex-custom", cls:"big"},
+  {id:"minimalist", name:"Minimalist cakes", note:"Korean-style, in solid colour or palette painting.", c:"#6fa8e6", tex:"tex-palette", cls:"wide"},
+  {id:"rainbow",  name:"Rainbow cakes", note:"Colour in every layer.", c:"#f5d256", tex:"tex-rainbow"},
+  {id:"macaron-cake", name:"Macaron cakes", note:"A cake finished with macarons.", c:"#86cf9a", tex:"tex-macaron"},
+  {id:"cupcakes", name:"Cupcakes", note:"Sets of 12. Add a set to any request.", c:"#f28ab8", tex:"tex-cupcake", cls:"wide"},
+  {id:"macarons", name:"Macarons", note:"Boxes of 12.", c:"#b9b9c1", tex:"tex-macarons", cls:"wide"},
+];
+
+const $ = (s, el=document) => el.querySelector(s);
+const state = { style:"theme", tiers:1, colour:"pink", flavour:FLAVOURS[0], message:"" };
+
+if (LOGO_SRC) { $("#brand").innerHTML = `<img src="${LOGO_SRC}" alt="Sweet Kiss Custom Cakes">`; }
+
+/* ---------- products ---------- */
+$("#products").innerHTML = PRODUCTS.map(p => {
+  const src = PHOTOS[p.id];
+  const img = src ? `<img src="${src}" alt="${p.name} by Sweet Kiss" loading="lazy">` : "";
+  return `<article class="item ${p.cls||""}">
+    <div class="ph ${src?"":p.tex}" style="--c:${p.c}" ${src?"":'aria-hidden="true"'}>${img}</div>
+    <h3>${p.name}</h3><p>${p.note}</p></article>`;
+}).join("");
+
+/* ---------- controls ---------- */
+function pillGroup(el, name, items, current){
+  el.innerHTML = items.map(v => {
+    const val = typeof v === "object" ? v.id : String(v);
+    const label = typeof v === "object" ? v.name : (name.startsWith("tiers") ? (v===1?"1 tier":v+" tiers") : v);
+    const shown = name === "h-tiers" ? String(v) : label;
+    const aria = name === "h-tiers" ? ` aria-label="${label}"` : "";
+    return `<label><input type="radio" name="${name}" value="${val}"${aria} ${String(current)===val?"checked":""}><span>${shown}</span></label>`;
+  }).join("");
+}
+function swatchGroup(el, name){
+  el.innerHTML = COLOURS.map(c =>
+    `<label><input type="radio" name="${name}" value="${c.id}" aria-label="${c.name}" ${state.colour===c.id?"checked":""}><span style="--c:${c.hex}"></span></label>`
+  ).join("");
+}
+pillGroup($("#hero-tiers"), "h-tiers", TIERS, state.tiers);
+pillGroup($("#form-tiers"), "tiers", TIERS, state.tiers);
+pillGroup($("#styles"), "style", STYLES, state.style);
+pillGroup($("#flavours"), "flavour", FLAVOURS, state.flavour);
+swatchGroup($("#hero-colours"), "h-colour");
+swatchGroup($("#form-colours"), "colour");
+
+/* ---------- cake render ---------- */
+const SHAPES = {1:{w:[60],h:[130]}, 2:{w:[70,48],h:[108,90]}, 3:{w:[78,58,40],h:[92,78,66]}};
+function renderCake(el){
+  const hex = COLOURS.find(c => c.id === state.colour).hex;
+  const s = SHAPES[state.tiers];
+  el.dataset.style = state.style;
+  const tiers = el.querySelectorAll(".tier");
+  if (tiers.length !== s.w.length){
+    /* tier count changed: restack, and let the new tiers drop in as feedback */
+    let html = `<div class="plate"></div>`;
+    s.w.forEach((w, i) => {
+      const top = i === s.w.length - 1;
+      html += `<div class="tier${top?" top":""}" style="--c:${hex};width:${w}%;height:calc(var(--u)*${s.h[i]})">${top?`<div class="topper"></div><div class="plaque"></div>`:""}</div>`;
+    });
+    el.classList.remove("drop"); void el.offsetWidth; el.classList.add("drop");
+    el.innerHTML = html;
+  } else {
+    tiers.forEach(t => t.style.setProperty("--c", hex));
+  }
+  const plaque = el.querySelector(".plaque");
+  if (plaque) plaque.textContent = state.message;
+}
+function styleName(){ return STYLES.find(s => s.id === state.style).name; }
+function colourName(){ return COLOURS.find(c => c.id === state.colour).name; }
+function render(){
+  renderCake($("#cake-hero"));
+  renderCake($("#cake-mini"));
+  $("#readout").innerHTML = `<b>${styleName()}</b>${state.tiers === 1 ? "1 tier" : state.tiers + " tiers"}, ${colourName().toLowerCase()} frosting`;
+  $("#col-name").textContent = "Selected: " + colourName();
+  const f = $("#f");
+  const d = f.querySelector('input[name="date"]:checked');
+  const mode = f.querySelector('input[name="mode"]:checked').value;
+  const rows = [
+    ["Style", styleName()],
+    ["Tiers", String(state.tiers)],
+    ["Feeds", $("#guests").value ? $("#guests").value + " people" : "Not set"],
+    ["Flavour", state.flavour],
+    ["Frosting", colourName()],
+    ["Message", state.message ? "“" + state.message + "”" : "None"],
+    ["Date", d ? longDate(new Date(d.value + "T00:00")) : "Not picked"],
+    ["Handover", mode],
+  ];
+  $("#summary").innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd></dd>`).join("");
+  $("#summary").querySelectorAll("dd").forEach((dd, i) => dd.textContent = rows[i][1]);
+}
+
+/* keep hero and form controls in sync */
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.name === "h-tiers" || t.name === "tiers"){
+    state.tiers = Number(t.value);
+    document.querySelectorAll(`input[name="tiers"][value="${t.value}"],input[name="h-tiers"][value="${t.value}"]`).forEach(i => i.checked = true);
+  }
+  if (t.name === "h-colour" || t.name === "colour"){
+    state.colour = t.value;
+    document.querySelectorAll(`input[name="colour"][value="${t.value}"],input[name="h-colour"][value="${t.value}"]`).forEach(i => i.checked = true);
+  }
+  if (t.name === "style") state.style = t.value;
+  if (t.name === "flavour") state.flavour = t.value;
+  if (t.name === "mode"){
+    $("#addr-field").hidden = t.value !== "Delivery";
+    if (t.value !== "Delivery") setErr("addr", "");
+  }
+  if (t.name === "date") setErr("date", "");
+  render();
+});
+$("#message").addEventListener("input", e => {
+  state.message = e.target.value.trim();
+  $("#msg-count").textContent = e.target.value.length + " of 40";
+  render();
+});
+$("#guests").addEventListener("input", render);
+
+/* ---------- dates ---------- */
+function iso(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function longDate(d){ return d.toLocaleDateString("en-PH", {weekday:"long", month:"long", day:"numeric", year:"numeric"}); }
+function earliestDate(){
+  const d = new Date(); d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + SHOP.leadDays);
+  return d;
+}
+(function calendar(){
+  document.querySelectorAll("[data-lead]").forEach(el => el.textContent = SHOP.leadDays);
+  document.querySelectorAll("[data-slots]").forEach(el => el.textContent = SHOP.slotsPerDay);
+  const first = earliestDate();
+  $("#earliest").textContent = first.toLocaleDateString("en-PH", {weekday:"long", month:"long", day:"numeric"});
+  const today = new Date(); today.setHours(0,0,0,0);
+  const cal = $("#cal");
+  let html = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => `<span class="dow" aria-hidden="true">${d}</span>`).join("");
+  for (let i = 0; i < today.getDay(); i++) html += `<div aria-hidden="true"></div>`;
+  for (let i = 0; i < 35; i++){
+    const d = new Date(today); d.setDate(today.getDate() + i);
+    const off = d < first;
+    const monthTag = (i === 0 || d.getDate() === 1) ? `<small>${d.toLocaleDateString("en-PH",{month:"short"})}</small>` : "";
+    const label = d.toLocaleDateString("en-PH", {weekday:"long", month:"long", day:"numeric"}) + (off ? ", too soon" : "");
+    html += `<label><input type="radio" name="date" value="${iso(d)}" aria-label="${label}" ${off?"disabled":""}><span>${monthTag}${d.getDate()}</span></label>`;
+  }
+  cal.innerHTML = html;
+})();
+
+/* ---------- cake of the day strip ---------- */
+(function strip(){
+  const today = new Date();
+  const tones = ["#e02d7a","#f28ab8","#6fa8e6","#86cf9a","#f5d256","#b9b9c1","#18181b"];
+  let html = "";
+  for (let i = 0; i < 7; i++){
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const src = PHOTOS.cakeOfDay[i];
+    const when = i === 0 ? "Today" : d.toLocaleDateString("en-PH", {weekday:"long"});
+    html += `<li>
+      <div class="ph ${src?"":"tex-palette"}" style="--c:${tones[i]};background-color:${tones[i]}" ${src?"":'aria-hidden="true"'}>${src?`<img src="${src}" alt="Sweet Kiss Cake of the Day, ${d.toLocaleDateString("en-PH",{month:"long",day:"numeric"})}" loading="lazy">`:""}</div>
+      <p class="date">${d.toLocaleDateString("en-PH", {month:"short", day:"numeric"})}</p>
+      <p class="cap">${when}'s cake is on the Facebook page</p></li>`;
+  }
+  $("#strip").innerHTML = html;
+})();
+$("#use-post").addEventListener("click", e => {
+  e.preventDefault();
+  $("#inspo").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"center"});
+  $("#inspo").focus({preventScroll:true});
+});
+
+/* ---------- submit ---------- */
+function setErr(id, msg){
+  const err = $("#" + id + "-err"); if (err) err.textContent = msg;
+  const el = id === "date" ? $("#cal") : $("#" + id);
+  if (el) el.setAttribute("aria-invalid", msg ? "true" : "false");
+  return !msg;
+}
+$("#f").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target;
+  const data = Object.fromEntries(new FormData(f));
+  const extras = [...f.querySelectorAll('input[name="extras"]:checked')].map(i => i.value);
+  let ok = true;
+  const g = Number(data.guests);
+  ok = setErr("guests", !data.guests ? "Add how many people the cake should feed." :
+        (!Number.isInteger(g) || g < 1 || g > 500) ? "Use a whole number from 1 to 500." : "") && ok;
+  ok = setErr("theme", state.style === "theme" && data.theme.trim().length < 3 ? "Describe the theme, even in a few words." : "") && ok;
+  const d = data.date ? new Date(data.date + "T00:00") : null;
+  ok = setErr("date", !d ? "Pick the date you need the cake." :
+        d < earliestDate() ? "That date is inside the " + SHOP.leadDays + "-day lead time. Pick a later one." : "") && ok;
+  if (data.mode === "Delivery") ok = setErr("addr", data.addr.trim() ? "" : "Add the delivery address.") && ok;
+  ok = setErr("name", data.name.trim() ? "" : "Add your name.") && ok;
+  ok = setErr("phone", /^(\+?63|0)9\d{2}[\s-]?\d{3}[\s-]?\d{4}$/.test(data.phone.trim()) ? "" : "Use a PH mobile number, like 0917 123 4567.") && ok;
+  if (!ok){
+    const first = f.querySelector('[aria-invalid="true"]');
+    if (first){
+      if (first.id === "cal") (first.querySelector('input:not(:disabled)') || first).focus();
+      else first.focus();
+    }
+    return;
+  }
+  const abc = "ABCDEFGHJKLMNPQRSTUVWXYZ", num = "23456789";
+  const pick = s => s[Math.floor(Math.random() * s.length)];
+  const ref = "SK-" + pick(abc) + pick(abc) + pick(num) + pick(num);
+  const lines = [
+    `Quote request ${ref}, Sweet Kiss Custom Cakes`,
+    ``,
+    `Style: ${styleName()}`,
+    `Tiers: ${state.tiers}`,
+    `Feeds: ${g} people`,
+    `Flavour: ${state.flavour}`,
+    `Frosting colour: ${colourName()}`,
+    data.theme.trim() ? `Design notes: ${data.theme.trim()}` : "",
+    data.inspo.trim() ? `Inspiration: ${data.inspo.trim()}` : "",
+    state.message ? `Message on cake: "${state.message}"` : "",
+    extras.length ? `Also: ${extras.join(", ")}` : "",
+    ``,
+    `Date: ${longDate(d)}`,
+    data.mode === "Delivery" ? `Delivery to: ${data.addr.trim()}` : `Pickup at 46 Scout Chuatoco`,
+    data.time.trim() ? `Time: ${data.time.trim()}` : "",
+    ``,
+    `Name: ${data.name.trim()}`,
+    `Mobile: ${data.phone.trim()}`,
+    ``,
+    `Please send the total and the deposit to hold this date.`,
+  ].filter((l, i, a) => l !== "" || (a[i-1] !== "" && a[i-1] !== undefined));
+  const msg = lines.join("\n").trim();
+  $("#ref").textContent = ref;
+  $("#out").textContent = msg;
+  $("#sms").href = "sms:" + SHOP.phone + "?&body=" + encodeURIComponent(msg);
+  $("#copy").textContent = "Copy request";
+  $("#done").classList.add("show");
+  $("#done").focus();
+});
+$("#copy").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("#out").textContent); $("#copy").textContent = "Copied"; }
+  catch { $("#copy").textContent = "Select the text above to copy"; }
+});
+
+render();
+</script>
+</body>
+</html>
