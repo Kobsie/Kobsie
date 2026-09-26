@@ -558,6 +558,11 @@ const SHOP = {
   messenger: "foodbudevents",
 };
 
+/* start the web fonts now rather than at first paint, so the headline swaps in sooner */
+if (document.fonts && document.fonts.load) {
+  ["800 1em 'Baloo 2'", "700 1em 'Baloo 2'", "400 1em 'Nunito Sans'", "700 1em 'Nunito Sans'"].forEach(ff => document.fonts.load(ff).catch(() => {}));
+}
+
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const f = $("#f");

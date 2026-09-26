@@ -604,6 +604,11 @@ const ITEMS = [
   { id: "raisin", name: "Raisin Bread", note: "Baked fresh every day." },
 ];
 
+/* Ask for both faces up front so the page does not render in a fallback serif first. */
+if (document.fonts && document.fonts.load) {
+  ['500 30px "EB Garamond"', '400 30px "EB Garamond"', '400 17px "Work Sans"', '600 15px "Work Sans"'].forEach(f => document.fonts.load(f).catch(() => {}));
+}
+
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
